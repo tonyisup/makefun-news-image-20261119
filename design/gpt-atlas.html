@@ -1,0 +1,134 @@
+<!doctype html>
+<!--
+  Candidate gpt-atlas, after the prose brief "The Living Atlas" by openai/gpt-6.2-sol (see
+  README.md, "Outside design briefs"; idea only, no code or wording taken). An illustrated
+  atlas: the lead (Shenzhen) in the upper-right quarter as the largest picture; seven featured
+  scenes around a pale world map, each tied to its place by a locator line; every other story
+  a dot on the map and a line in the regional index below, with one source each. The Kerch
+  date check sits in the Kerch scene. No timeline: our sources give no reporting times.
+  Content: design/stories.js. Render: ./render.sh design/gpt-atlas.html <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - the living atlas</title>
+<script src="stories.js"></script>
+<script src="scenes.js"></script>
+<script src="world.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { position: relative; background: #fbf7ee; color: #23262c; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  header { position: absolute; left: 14px; right: 14px; top: 10px; height: 70px; display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #23262c; padding-bottom: 6px; }
+  .date { font-size: 46px; font-weight: 800; letter-spacing: -1.1px; line-height: 1; }
+  .kick { font-size: 12.5px; font-weight: 700; letter-spacing: 2.5px; color: #6b6f76; margin-bottom: 3px; }
+  .count { text-align: right; font-size: 30px; font-weight: 800; line-height: 1; color: #b5482c; }
+  .count small { display: block; font-size: 12px; letter-spacing: 1.5px; color: #6b6f76; }
+  .card { position: absolute; background: #fff; border: 1px solid #ddd5c4; box-shadow: 0 1px 0 #d2c9b5; overflow: hidden; }
+  .card .t { padding: 4px 7px 4px; }
+  .card h2 { font-size: 14px; line-height: 1.1; font-weight: 800; letter-spacing: -0.15px; }
+  .card .pl { font-size: 9.5px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #b5482c; }
+  .card .s { font-size: 9.5px; color: #7c8087; font-weight: 600; margin-top: 1px; }
+  .card .dn { font-size: 10px; font-weight: 800; color: #9c2b22; margin-top: 1px; }
+  .lead h1 { font-size: 22px; line-height: 1.05; letter-spacing: -0.4px; }
+  .lead p { font-size: 11.5px; line-height: 1.18; color: #3d434b; margin-top: 2px; }
+  .lead .pl { font-size: 11px; }
+  #map { position: absolute; }
+  .index { position: absolute; left: 14px; right: 14px; top: 650px; bottom: 8px; column-count: 4; column-gap: 16px; column-fill: balance; border-top: 2px solid #23262c; padding-top: 5px; }
+  .grp { margin-bottom: 4px; }
+  .grp h3 { break-after: avoid; }
+  .grp h3 { font-size: 11.5px; font-weight: 800; letter-spacing: 1.5px; color: #b5482c; border-bottom: 1px solid #ddd5c4; margin-bottom: 2px; }
+  .grp h3 span { color: #6b6f76; }
+  .it { break-inside: avoid; font-size: 14px; line-height: 1.18; padding: 1px 0 4px; }
+  .it i { font-size: 11px; }
+  .it b { font-weight: 800; }
+  .it i { font-style: normal; color: #7c8087; font-size: 10px; font-weight: 600; }
+  #lines { position: absolute; left: 0; top: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="kick">THE WORLD’S NEWS · WHERE IT BROKE</div><div class="date" id="date"></div></div>
+  <div class="count" id="count"></div>
+</header>
+<div id="cards"></div>
+<svg id="map"></svg>
+<svg id="lines" width="1024" height="1024"></svg>
+<section class="index" id="index"></section>
+<script>
+  const all = [...window.STORIES].sort((a, b) => a.rank - b.rank);
+  const L = window.LEAD;
+  document.getElementById('date').textContent = window.DAY;
+  document.getElementById('count').innerHTML = `${all.length + 1}<small>STORIES</small>`;
+  const byScene = (k) => all.find((s) => s.scene === k);
+  // Map box and projection: equirectangular, lon -130..180, lat 75..-56.
+  const MAP = { x: 206, y: 340, w: 612 };
+  const LON0 = -130, LON1 = 180;
+  const k = MAP.w / (LON1 - LON0);
+  MAP.h = Math.round(131 * k);
+  const proj = ([lat, lon]) => [MAP.x + (lon - LON0) * k, MAP.y + (75 - lat) * k];
+  const map = document.getElementById('map');
+  Object.assign(map.style, { left: MAP.x + 'px', top: MAP.y + 'px' });
+  map.setAttribute('width', MAP.w); map.setAttribute('height', MAP.h);
+  map.innerHTML = `<rect width="${MAP.w}" height="${MAP.h}" fill="#dfeaf3" rx="6"/><g transform="scale(${k}) translate(${-(LON0 + 180)} 0)"><path d="${window.WORLD_PATH}" fill="#efe3c8" stroke="#d8c8a6" stroke-width="0.25"/></g>`;
+  // Featured scenes: [scene key, card box (x, y, w), anchor side]. Lead gets the upper-right quarter.
+  const feat = [
+    ['icj', 14, 90, 245], ['truce', 266, 90, 245],
+    ['dow', 14, 340, 186], ['cop31', 14, 494, 186],
+    ['hormuz', 824, 340, 186], ['somalia', 824, 444, 186], ['cyclone', 824, 548, 186],
+  ];
+  const cards = [];
+  const lead = `<div class="card lead" style="left:520px;top:90px;width:490px;height:245px"><div style="background:#f4e4cf;text-align:center;line-height:0">${window.summitWide(420)}</div><div class="t"><div class="pl">${L.place}</div><h1>${L.head}</h1><p>${L.detail} <span class="s">${L.src[0]}</span></p></div></div>`;
+  cards.push(lead);
+  const featured = new Set();
+  for (const [key, x, y, w] of feat) {
+    const s = byScene(key); featured.add(s);
+    const small = w < 200;
+    const h = key === 'dow' || key === 'cop31' ? 150 : small ? 98 : 240;
+    const pic = h < 120 ? `<div style="float:left;margin-right:6px">${window.scene(key, 92)}</div>`
+      : small ? `<div style="text-align:center;line-height:0;background:#f3f1ec">${window.scene(key, 150)}</div>` : window.scene(key, w);
+    const dn = s.datenote ? `<div class="dn">${s.datenote}</div>` : '';
+    cards.push(`<div class="card" data-k="${key}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">${pic}<div class="t"><div class="pl">${s.place}</div><h2>${s.short}</h2>${dn}<div class="s">${s.src[0]}</div></div></div>`);
+  }
+  document.getElementById('cards').innerHTML = cards.join('');
+  // Dots for every story; locator lines only for the featured scenes and the lead.
+  const dots = [];
+  const lines = [];
+  for (const s of all) {
+    if (!s.ll) continue;
+    const [px, py] = proj(s.ll);
+    const big = featured.has(s);
+    dots.push(`<circle cx="${(px - MAP.x).toFixed(1)}" cy="${(py - MAP.y).toFixed(1)}" r="${big ? 4.5 : 3}" fill="${big ? '#b5482c' : '#5b6470'}" stroke="#fff" stroke-width="1"/>`);
+  }
+  map.insertAdjacentHTML('beforeend', dots.join(''));
+  const anchor = (el, px, py) => {
+    const r = el.getBoundingClientRect();
+    const ax = Math.max(r.left, Math.min(px, r.right));
+    const ay = Math.max(r.top, Math.min(py, r.bottom));
+    return [ax, ay];
+  };
+  const leadPt = proj([22.5, 114.1]);
+  lines.push([anchor(document.querySelector('.lead'), ...leadPt), leadPt]);
+  for (const el of document.querySelectorAll('.card[data-k]')) {
+    const s = byScene(el.dataset.k);
+    const p = proj(s.ll);
+    lines.push([anchor(el, ...p), p]);
+  }
+  document.getElementById('lines').innerHTML = lines.map(([[x1, y1], [x2, y2]]) =>
+    `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="#b5482c" stroke-width="1.6"/><circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="5.5" fill="none" stroke="#b5482c" stroke-width="1.6"/>`).join('');
+  // The index: every story not featured, grouped by region, one source each.
+  const groups = [
+    ['Americas', (s) => s.region === 'am'], ['Europe', (s) => s.region === 'eu'], ['Middle East', (s) => s.region === 'me'],
+    ['Africa', (s) => s.region === 'af'], ['Asia', (s) => s.region === 'as' && !['New Zealand', 'Australia'].includes(s.place)],
+    ['Oceania', (s) => ['New Zealand', 'Australia'].includes(s.place)], ['World', (s) => s.region === 'gl'],
+  ];
+  const rest = all.filter((s) => !featured.has(s));
+  document.getElementById('index').innerHTML = groups.map(([name, f]) => {
+    const items = rest.filter(f);
+    if (!items.length) return '';
+    return `<div class="grp"><h3>${name.toUpperCase()} <span>${all.filter(f).length}</span></h3>` +
+      items.map((s) => `<div class="it"><b>${s.head}.</b> <i>${s.src[0]}</i></div>`).join('') + '</div>';
+  }).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<!--
+  Candidate gpt-three-acts, after the prose brief "The News in Three Acts" by
+  openai/gpt-6.2-sol (see README.md, "Outside design briefs"; idea only, no code or wording
+  taken). A broadside: the summit drawn wide across the top; below it, three scene bands of
+  unequal height (decisions; markets and culture; on the ground), each scene with its own
+  short subject-and-verb caption and source; at the right a narrow dispatch rail with every
+  other story, led by Putin's truce refusal and its date check, and closing with the
+  day's date check. No map (no token inset), no timeline (no reporting times in our sources).
+  Content: design/stories.js. Render: ./render.sh design/gpt-three-acts.html <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - the news in three acts</title>
+<script src="stories.js"></script>
+<script src="scenes.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { background: #fbf8f1; color: #172036; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 10px 12px 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #172036; padding-bottom: 5px; height: 62px; }
+  .date { font-family: Rockwell, "Courier New", Georgia, serif; font-size: 44px; font-weight: 800; letter-spacing: -1px; line-height: 1; white-space: nowrap; }
+  .count { text-align: right; font-size: 13px; font-weight: 800; letter-spacing: 1.5px; color: #e0694f; }
+  .lead { display: grid; grid-template-columns: 560px 1fr; gap: 14px; align-items: center; margin-top: 6px; background: #172036; color: #fff; height: 190px; overflow: hidden; }
+  .lead .t { padding-right: 14px; }
+  .lead .pl { font-size: 11.5px; font-weight: 800; letter-spacing: 1.5px; color: #f2b134; }
+  .lead h1 { font-size: 30px; line-height: 1.04; letter-spacing: -0.5px; margin-top: 3px; }
+  .lead p { font-size: 13px; line-height: 1.25; color: #d4d9e3; margin-top: 5px; }
+  .lead .s { color: #9aa5b8; font-size: 11px; font-weight: 600; }
+  .body { display: grid; grid-template-columns: 664px 1fr; gap: 12px; margin-top: 8px; height: 752px; }
+  .acts { display: grid; grid-template-rows: 262px 236px 236px; gap: 6px; }
+  .act { position: relative; border-top: 3px solid #172036; padding-top: 16px; }
+  .act > .h { position: absolute; top: 2px; left: 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #3f8f7a; }
+  .row { display: grid; gap: 8px; height: 100%; }
+  .sc { display: grid; grid-template-rows: minmax(0, 1fr) auto; background: #fff; border: 1px solid #ded8ca; overflow: hidden; }
+  .sc .art { position: relative; min-height: 0; overflow: hidden; background: #efebe2; }
+  .sc .art svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+  .sc .cap { padding: 3px 7px 4px; border-top: 3px solid var(--c); }
+  .sc h2 { font-size: 14px; line-height: 1.1; font-weight: 800; letter-spacing: -0.15px; }
+  .sc .s { font-size: 9.5px; color: #7c8087; font-weight: 600; margin-top: 1px; }
+  .rail { border-top: 3px solid #172036; padding-top: 4px; }
+  .rail .h { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #3f8f7a; margin-bottom: 3px; }
+  .dsp { font-size: 12px; line-height: 1.16; padding: 2px 0 3px; border-bottom: 1px solid #e6e0d3; }
+  .dsp b { font-weight: 800; color: var(--c); }
+  .dsp i { font-style: normal; font-size: 9.5px; color: #7c8087; font-weight: 600; }
+  .dsp .dn { display: block; font-size: 10.5px; font-weight: 800; color: #b23a2a; }
+  .dc { margin-top: 5px; background: #fff1ea; border-left: 4px solid #e0694f; padding: 4px 6px; font-size: 11px; line-height: 1.25; }
+  .dc b { color: #b23a2a; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="date" id="date"></div>
+  <div class="count" id="count"></div>
+</header>
+<section class="lead" id="lead"></section>
+<section class="body"><div class="acts" id="acts"></div><div class="rail" id="rail"></div></section>
+<script>
+  const R = window.REGIONS;
+  const all = [...window.STORIES].sort((a, b) => a.rank - b.rank);
+  const L = window.LEAD;
+  document.getElementById('date').textContent = window.DAY;
+  document.getElementById('count').textContent = `${all.length + 1} STORIES · 6 REGIONS`;
+  document.getElementById('lead').innerHTML = `${window.summitWide(560)}<div class="t"><div class="pl">${L.place.toUpperCase()}</div><h1>${L.head}</h1><p>${L.detail} <span class="s">${L.src.slice(0, 2).join(' · ')}</span></p></div>`;
+  // The three acts: [heading, columns, [scene key, story rank]...]. Captions are the stories' own short labels.
+  const byRank = (r) => all.find((s) => s.rank === r);
+  const acts = [
+    ['DECISIONS', '1fr 1fr', [['icj', 2], ['cop31', 5]]],
+    ['MARKETS AND CULTURE', '1fr 1fr 1fr', [['dow', 4], ['ant', 6], ['gta', 28]]],
+    ['ON THE GROUND', '1fr 1fr 1fr', [['gaza', 11], ['kenya', 26], ['colombia', 21]]],
+  ];
+  const shown = new Set();
+  document.getElementById('acts').innerHTML = acts.map(([h, cols, scenes]) =>
+    `<div class="act"><span class="h">${h}</span><div class="row" style="grid-template-columns:${cols}">` +
+    scenes.map(([key, rank]) => {
+      const s = byRank(rank); shown.add(s);
+      const fit = cols.split(' ').length > 2 ? 'meet' : undefined; // narrow tiles: show the whole drawing
+      return `<div class="sc" style="--c:${R[s.region].color}"><div class="art">${window.scene(key, 320, 200, fit)}</div><div class="cap"><h2>${s.short}</h2><div class="s">${s.place} · ${s.src[0]}</div></div></div>`;
+    }).join('') + '</div></div>').join('');
+  // The rail: every other story, most consequential first, one source each.
+  const rest = all.filter((s) => !shown.has(s));
+  document.getElementById('rail').innerHTML = `<div class="h">DISPATCHES · ${rest.length}</div>` +
+    rest.map((s) => `<div class="dsp" style="--c:${R[s.region].color}"><b>${s.place}.</b> ${s.short}. <i>${s.src[0]}</i>${s.datenote ? `<span class="dn">${s.datenote}</span>` : ''}</div>`).join('') +
+    `<div class="dc"><b>DATE CHECK</b> All 19 Nov news, each checked against 2+ outlets. Not shown: the van Gogh sale and EU €45bn loan (18 Nov), the UK–EU summit (20 Nov).</div>`;
+</script>
+</body>
+</html>

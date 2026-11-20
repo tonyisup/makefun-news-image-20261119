@@ -1,0 +1,78 @@
+<!doctype html>
+<!--
+  Candidate D5, "mosaic with the fixes": the round-2 mosaic (D) with the five changes both
+  outside critiques agreed on (see README.md, "Outside design briefs"): the lead drawn as the
+  largest picture on the page (a 4 x 2 block of the grid); drawn actions instead of generic
+  icons for the 13 stories that have a scene in design/scenes.js; all 34 checked stories;
+  a source under every story; and the Kerch date check inside the Kerch cell.
+  Content: design/stories.js. Render: ./render.sh design/mosaic-fixes.html <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - mosaic with fixes</title>
+<script src="stories.js"></script>
+<script src="icons.js"></script>
+<script src="scenes.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { background: #ece8de; color: #15181d; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 12px 14px 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 5px; border-bottom: 4px solid #15181d; }
+  .kick { font-size: 12.5px; font-weight: 700; letter-spacing: 2.5px; color: #555b63; margin-bottom: 2px; }
+  .date { font-size: 46px; font-weight: 800; letter-spacing: -1.1px; line-height: 1; }
+  .key { display: grid; grid-template-columns: repeat(3, auto); gap: 2px 12px; font-size: 12px; font-weight: 700; color: #3d434b; }
+  .key span::before { content: ''; display: inline-block; width: 10px; height: 10px; background: var(--c); margin-right: 5px; }
+  .grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(6, 1fr); gap: 5px; margin-top: 6px; height: 912px; }
+  .cell { background: #fff; border-top: 5px solid var(--c); padding: 4px 6px 3px; overflow: hidden; display: flex; flex-direction: column; }
+  .lead { grid-column: 1 / span 4; grid-row: 1 / span 2; padding: 0; border-top-width: 6px; position: relative; }
+  .lead svg { display: block; }
+  .lead .cap { padding: 5px 12px 4px; }
+  .lead .lplace { font-size: 11.5px; font-weight: 800; letter-spacing: 1.3px; color: var(--c); }
+  .lead h1 { font-size: 25px; line-height: 1.05; letter-spacing: -0.4px; margin-top: 1px; }
+  .lead p { font-size: 12px; line-height: 1.2; color: #3d434b; margin-top: 2px; }
+  .pic { height: 34px; display: flex; align-items: center; justify-content: space-between; }
+  .fig { flex: 0 0 auto; font-size: 25px; font-weight: 800; letter-spacing: -1px; color: var(--c); line-height: 1; white-space: nowrap; }
+  .fig.long { font-size: 19px; }
+  .place { flex: 0 1 auto; min-width: 0; font-size: 8.5px; font-weight: 800; letter-spacing: 0.1px; text-transform: uppercase; color: var(--c); text-align: right; line-height: 1.1; max-width: 72px; margin-left: 3px; }
+  .scn { margin: -1px -6px 0; line-height: 0; }
+  .scn .place { position: absolute; }
+  .cell h2 { font-size: 13px; line-height: 1.1; font-weight: 800; letter-spacing: -0.15px; margin-top: 3px; }
+  .cell p { font-size: 10.5px; line-height: 1.17; color: #474d55; margin-top: 2px; }
+  .cell .dn { font-size: 10px; font-weight: 800; color: #9c2b22; margin-top: 2px; }
+  .src { font-size: 9px; color: #7a8088; font-weight: 600; margin-top: auto; padding-top: 1px; }
+  .note { background: #15181d; color: #e9e6de; border-top-color: #15181d; justify-content: center; }
+  .note h2 { color: #fff; font-size: 12px; letter-spacing: 1px; margin-top: 0; }
+  .note p { color: #d0d3d8; font-size: 10.5px; }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="kick" id="kick"></div><div class="date" id="date"></div></div>
+  <div class="key" id="key"></div>
+</header>
+<section class="grid" id="grid"></section>
+<script>
+  const R = window.REGIONS;
+  const sorted = [...window.STORIES].sort((a, b) => a.rank - b.rank);
+  document.getElementById('date').textContent = window.DAY;
+  document.getElementById('kick').textContent = `THE WORLD’S NEWS IN ${sorted.length + 1} PICTURES`;
+  document.getElementById('key').innerHTML = ['eu', 'me', 'as', 'af', 'am', 'gl'].map((r) => `<span style="--c:${R[r].color}">${R[r].name}</span>`).join('');
+  const L = window.LEAD;
+  const src = (s) => `<div class="src">${s.src.slice(0, 2).join(' · ')}</div>`;
+  const cells = [`<div class="cell lead" style="--c:${R[L.region].color}">${window.summitWide(575)}<div class="cap"><div class="lplace">${L.place.toUpperCase()}</div><h1>${L.head}</h1><p>${L.detail} <span style="color:#7a8088;font-weight:600">${L.src.slice(0, 2).join(' · ')}</span></p></div></div>`];
+  for (const s of sorted) {
+    const c = R[s.region].color;
+    const dn = s.datenote ? `<div class="dn">${s.datenote}</div>` : '';
+    if (s.scene) {
+      cells.push(`<div class="cell" style="--c:${c}"><div class="scn">${window.scene(s.scene, 136)}</div><h2>${s.short}</h2>${dn}${src(s)}</div>`);
+    } else {
+      const pic = s.fig ? `<span class="fig${s.fig.length > 4 ? ' long' : ''}">${s.fig}</span>` : window.icon(s.icon, 32, c);
+      cells.push(`<div class="cell" style="--c:${c}"><div class="pic">${pic}<span class="place">${s.place}</span></div><h2>${s.short}</h2><p>${s.detail}</p>${src(s)}</div>`);
+    }
+  }
+  cells.push(`<div class="cell note"><h2>DATE CHECK</h2><p>Every story is 19 Nov news, checked against 2+ outlets (named under each). Not shown: the van Gogh sale and the EU’s €45bn loan (18 Nov), the UK–EU summit (20 Nov).</p></div>`);
+  document.getElementById('grid').innerHTML = cells.join('');
+</script>
+</body>
+</html>

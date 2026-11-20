@@ -1,0 +1,106 @@
+<!doctype html>
+<!--
+  Candidate gemini-mosaic, after the prose brief "The Editorial Poster Mosaic" by
+  google/gemini-4-neon (see README.md, "Outside design briefs"; idea only, no code or wording
+  taken). A poster: a monumental serif date; an upper tier with a large hero picture (the
+  summit) beside a 2 x 2 block of picture tiles; a lower tier of five tall picture tiles; each
+  picture with a solid caption band (headline and source), never type over the drawing.
+  Below: a locator map (numbered for the ten pictures) and a three-column world dispatch of
+  the other 24 stories, then a date-check strip. Corrections to the brief, ours win: no blast
+  on the Kerch Bridge, no mines drawn at Hormuz (Iran's claim, in the caption), no timeline
+  (our sources give no reporting times), no padding toward 40 stories.
+  Content: design/stories.js. Render: ./render.sh design/gemini-mosaic.html <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - poster mosaic</title>
+<script src="stories.js"></script>
+<script src="scenes.js"></script>
+<script src="world.js"></script>
+<script src="map.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { background: #faf8f3; color: #16171a; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 10px 12px 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; height: 70px; border-bottom: 3px solid #16171a; padding-bottom: 6px; }
+  .date { font-family: Georgia, "Times New Roman", serif; font-size: 46px; font-weight: 700; letter-spacing: -1px; line-height: 1; white-space: nowrap; }
+  .theme { text-align: right; font-size: 12px; line-height: 1.3; color: #44474d; font-weight: 600; max-width: 330px; }
+  .theme b { color: #16171a; }
+  .upper { display: grid; grid-template-columns: 494px 1fr; gap: 6px; margin-top: 6px; height: 330px; }
+  .quad { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px; }
+  .lower { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 6px; height: 212px; }
+  .tile { position: relative; overflow: hidden; display: grid; grid-template-rows: minmax(0, 1fr) auto; background: #16171a; }
+  .tile .art { position: relative; min-height: 0; overflow: hidden; }
+  .tile .art svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+  .tile .band { background: #16171a; color: #fff; padding: 4px 7px 5px; }
+  .tile.alt .band { background: #fff; color: #16171a; border: 1px solid #d9d5cb; border-top: none; }
+  .band h2 { font-size: 14px; line-height: 1.1; font-weight: 800; letter-spacing: -0.15px; }
+  .band .s { font-size: 9.5px; color: #a9adb4; font-weight: 600; margin-top: 1px; }
+  .tile.alt .band .s { color: #7c8087; }
+  .band .dn { font-size: 10px; font-weight: 800; color: #ffb4a8; margin-top: 1px; }
+  .tile.alt .band .dn { color: #9c2b22; }
+  .num { position: absolute; left: 0; top: 0; background: #b5482c; color: #fff; font-size: 11px; font-weight: 800; padding: 1px 5px 2px; z-index: 2; }
+  .hero .band { padding: 6px 10px 7px; }
+  .hero h1 { font-family: Georgia, "Times New Roman", serif; font-size: 25px; line-height: 1.05; }
+  .hero p { font-size: 12px; line-height: 1.2; color: #d6d8dc; margin-top: 3px; }
+  .bottom { display: grid; grid-template-columns: 330px 1fr; gap: 12px; margin-top: 8px; height: 300px; }
+  .maph { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #44474d; margin-bottom: 2px; }
+  .dispatch { column-count: 3; column-gap: 14px; column-fill: balance; border-top: 2px solid #16171a; padding-top: 4px; }
+  .d { break-inside: avoid; display: flex; gap: 6px; font-size: 13.5px; line-height: 1.17; padding: 1px 0 5px; }
+  .d .dot { flex: 0 0 8px; height: 8px; margin-top: 4px; border-radius: 50%; background: var(--c); }
+  .d b { font-weight: 800; }
+  .d i { font-style: normal; color: #7c8087; font-size: 10px; font-weight: 600; }
+  .datecheck { position: absolute; left: 12px; right: 12px; bottom: 6px; font-size: 11.5px; background: #fff4ef; border-left: 5px solid #b5482c; padding: 4px 8px; color: #3a3d42; }
+  .datecheck b { color: #b5482c; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="date" id="date"></div>
+  <div class="theme" id="theme"></div>
+</header>
+<section class="upper"><div id="hero"></div><div class="quad" id="quad"></div></section>
+<section class="lower" id="lower"></section>
+<section class="bottom"><div><div class="maph">WHERE IT HAPPENED · NUMBERS MATCH THE PICTURES</div><div id="map"></div></div><div class="dispatch" id="dispatch"></div></section>
+<div class="datecheck" id="datecheck"></div>
+<script>
+  const R = window.REGIONS;
+  const all = [...window.STORIES].sort((a, b) => a.rank - b.rank);
+  const L = window.LEAD;
+  document.getElementById('date').textContent = window.DAY;
+  const count = (r) => all.filter((s) => s.region === r).length + (L.region === r ? 1 : 0);
+  document.getElementById('theme').innerHTML = `<b>${all.length + 1} stories:</b> a three-way summit, a genocide ruling, a market slide<br>` +
+    ['eu', 'me', 'as', 'af', 'am', 'gl'].map((r) => `${R[r].name} ${count(r)}`).join(' · ');
+  const by = (k) => all.find((s) => s.scene === k);
+  const quadKeys = ['icj', 'truce', 'dow', 'ant'];
+  const lowKeys = ['cop31', 'berlin', 'hormuz', 'gaza', 'gta'];
+  const pics = [...quadKeys, ...lowKeys].map(by);
+  const numOf = new Map(pics.map((s, i) => [s, i + 2]));
+  const tile = (s, w, h, alt) => {
+    const dn = s.datenote ? `<div class="dn">${s.datenote}</div>` : '';
+    // The drawing fills whatever the caption band leaves (cropped from the bottom, never squeezed).
+    return `<div class="tile${alt ? ' alt' : ''}"><span class="num">${numOf.get(s)}</span><div class="art">${window.scene(s.scene, w, h)}</div>` +
+      `<div class="band"><h2>${s.short}</h2>${dn}<div class="s">${s.place} · ${s.src[0]}</div></div></div>`;
+  };
+  document.getElementById('hero').innerHTML = `<div class="tile hero" style="height:330px"><span class="num">1</span><div class="art">${window.scene('summit', 494, 330)}</div>` +
+    `<div class="band"><h1>${L.head}</h1><p>${L.detail} <span class="s">${L.src[0]}</span></p></div></div>`;
+  document.getElementById('quad').innerHTML = quadKeys.map((k, i) => tile(by(k), 247, 162, i % 3 !== 0)).join('');
+  document.getElementById('lower').innerHTML = lowKeys.map((k, i) => tile(by(k), 194, 212, i % 2 === 1)).join('');
+  // Map: every story a dot; the ten pictures numbered.
+  const items = [{ n: 1, ll: [22.5, 114.1], color: '#b5482c' }, ...pics.map((s) => ({ n: numOf.get(s), ll: s.ll, color: '#b5482c' }))];
+  const plain = all.filter((s) => !numOf.has(s) && s.ll);
+  let mapSvg = window.locatorMap(330, items, { r: 6.4, land: '#e4dccb' });
+  const kx = 330 / 310;
+  const dots = plain.map((s) => `<circle cx="${((s.ll[1] + 130) * kx).toFixed(1)}" cy="${((75 - s.ll[0]) * kx).toFixed(1)}" r="2.6" fill="#5b6470"/>`).join('');
+  mapSvg = mapSvg.replace('</g>', `</g>${dots}`);
+  document.getElementById('map').innerHTML = mapSvg;
+  // Dispatch: the other 24 stories by region, one source each.
+  const order = ['eu', 'me', 'as', 'af', 'am', 'gl'];
+  const rest = all.filter((s) => !numOf.has(s)).sort((a, b) => order.indexOf(a.region) - order.indexOf(b.region) || a.rank - b.rank);
+  document.getElementById('dispatch').innerHTML = rest.map((s) =>
+    `<div class="d" style="--c:${R[s.region].color}"><span class="dot"></span><div>${s.place.includes(s.short.split(/[:’ ]/)[0]) ? '' : `<b>${s.place}:</b> `}${s.short}. <i>${s.src[0]}</i></div></div>`).join('');
+  document.getElementById('datecheck').innerHTML = `<b>DATE CHECK</b> Everything here is 19 Nov news, each story checked against two or more outlets. Not shown: the van Gogh sale and the EU’s €45bn loan (18 Nov); the UK–EU summit (20 Nov).`;
+</script>
+</body>
+</html>

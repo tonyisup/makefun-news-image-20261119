@@ -30,7 +30,7 @@ local and is gitignored, because its reasons describe other entries.
   function) with HTTP 400. Retries only happen after an answer with no verdict, so this cost
   1 call in about 800.
 
-## Results (779 pinned calls; spend about $1)
+## Results (1,079 pinned calls; spend about $1.21)
 
 | Round | Candidate | Stories | Rating ± SE | E vs top 5 |
 |---|---|---|---|---|
@@ -40,17 +40,25 @@ local and is gitignored, because its reasons describe other entries.
 | 1 | B: front + briefs (`front-briefs.html`) | 30 | −0.85 ± 0.34 | 0.30 |
 | 1 | C: ranked list (`ranked.html`) | 30 | −0.61 ± 0.33 | 0.35 |
 | 2 | C2: ranked + pictures (`ranked-pics.html`) | 30 | −0.57 ± 0.27 | 0.36 |
-| 2 | B2: front + briefs with pictures (`front-pics.html`) | 30 | −0.35 ± 0.20 | 0.41 |
-| 2 | **D: pictogram mosaic (`mosaic.html`)** | 30 | **−0.31 ± 0.26** | **0.42** |
+| 2 | B2: front + briefs with pictures (`front-pics.html`) | 30 | −0.37 ± 0.19 | 0.41 |
+| 2 | **D: pictogram mosaic (`mosaic.html`)** | 30 | **−0.29 ± 0.22** | **0.43** |
 | 3 | D3: mosaic, 34 stories + sources (`mosaic34.html`) | 34 | −0.53 ± 0.27 | 0.37 |
 | 3 | D3m: the same + locator map (`mosaic34.html?map=1`) | 34 | −0.53 ± 0.27 | 0.37 |
 | 3 | B3: front, 34 stories + sources (`front34.html`) | 34 | −0.70 ± 0.27 | 0.33 |
 | 3 | B3m: the same + locator map (`front34.html?map=1`) | 34 | −0.68 ± 0.27 | 0.34 |
-| 4 | D4: D with event drawings (`mosaic-art.html`) | 30 | −0.34 ± 0.26 | 0.41 |
+| 4 | D4: D with event drawings (`mosaic-art.html`) | 30 | −0.34 ± 0.22 | 0.41 |
 | 4 | B4: B2 with event drawings (`front-art.html`) | 30 | −0.54 ± 0.27 | 0.37 |
+| 5 | D5: D with the five fixes both outside critiques agreed on (`mosaic-fixes.html`) | 34 | −0.47 ± 0.26 | 0.38 |
+| 5 | gemini-mosaic, after Gemini's "Editorial Poster Mosaic" (`gemini-mosaic.html`) | 34 | −0.26 ± 0.26 | 0.44 |
+| 5 | gpt-three-acts, after GPT's "News in Three Acts" (`gpt-three-acts.html`) | 34 | −0.56 ± 0.27 | 0.36 |
+| 5 | gpt-atlas, after GPT's "Living Atlas" (`gpt-atlas.html`) | 34 | −0.88 ± 0.28 | 0.29 |
 
-The opponents fall between −0.12 and +0.08. Head to head (12 calls each, both orders,
-both routes): D took 0.51 against B2 and 0.55 against D4, and D4 took 0.54 against B2.
+Ratings are from the final fit over all 1,079 pinned calls, so earlier rows moved a little
+as data came in (D: −0.31 after round 2, −0.29 now, with 84 calls). The opponents fall
+between −0.16 and +0.07. Head to head (both orders, both routes): D took 0.51 against B2
+and 0.55 against D4 (12 calls each), D4 took 0.54 against B2, and D took 0.512 ± 0.040
+against gemini-mosaic (24 calls; picked 13 of 24). D and gemini-mosaic are level, and no
+round-5 candidate beat D by more than its error.
 
 ## What moved the judge, and what did not
 
@@ -64,6 +72,12 @@ both routes): D took 0.51 against B2 and 0.55 against D4, and D4 took 0.54 again
    strike as 18 November news. It was (CNN, UPI, Al Jazeera), and the judge marked the first
    entry down for showing it as 19 November news. Every later candidate reports the 19th's
    news instead: Putin ruling out truce talks.
+5. **Outside ideas, tested (round 5).** Two other models' design briefs (see README.md) were
+   built as candidates, with every line of code written here. A poster with drawn scenes and
+   caption bands (gemini-mosaic) drew level with D. Applying both critiques' agreed fixes to
+   D did not beat it: a drawn lead, drawn actions, 34 stories, a source per story, and the
+   date check beside the Kerch story. A map-first atlas lost clearly; this judge rewards
+   readable pictures of events over geography.
 
 Reproduce: `node tools/plan.ts <tag> <reps> <images> --route z-ai/fp8`, then
 `node tools/judge.ts --plan judge-runs/plan-<tag>.json`, then `node tools/bt.ts`.
