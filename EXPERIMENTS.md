@@ -69,6 +69,11 @@ routes and head to head, but not by more than the conservative fit error.
 | v1 (`layout.html`) | −0.87 | — | 0.981243 (0.9739–0.9886), 12-0 |
 | D (`mosaic.html`) | −0.29 | about 0.989 | 0.977797 (0.9696–0.9860), 11-1-0 |
 | gemini-mosaic (`gemini-mosaic.html`) | −0.29 | — | 0.986947 (0.9812–0.9927), 12-0 |
+| g6c (`gemini-mosaic.html?big=1`) | −0.18 | not worse than gemini-mosaic | 0.986947 (0.9812–0.9927), 12-0: identical to gemini-mosaic |
+
+**Final entry: g6c** (submission `01a1f9b1-89be-75c2-8dc1-ac705d8ce392`, commit `642b445`).
+It is the best on both lines of evidence: ahead locally (head to head 0.554, 18 of 24 picks;
++0.12 in the fit) and level on the real house rate. The house games cannot tell the two apart.
 
 The prediction for D missed. It was a straight line through two points (v1 and the top five)
 from the local rating, which is measured against rival entries, to the house rate, which is
