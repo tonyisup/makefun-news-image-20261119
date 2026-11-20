@@ -1,0 +1,99 @@
+<!doctype html>
+<!--
+  Direction D3, "pictogram mosaic, 34": every story of 19 November 2026 in one cell of a
+  7 x 5 grid, its picture a large pictogram or its key figure, then a short bold label, one
+  line of detail and the outlets it was checked against. Lead across the top with the flags.
+  ?map=1 puts a numbered "where it happened" locator map in the last two cells (numbers match
+  the cells) and moves the date check to the footer; without it those cells hold the date check.
+  Content: design/stories.js. Render: ./render.sh "design/mosaic34.html[?map=1]" <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - mosaic of 34</title>
+<script src="stories.js"></script>
+<script src="icons.js"></script>
+<script src="world.js"></script>
+<script src="map.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { background: #ece8de; color: #15181d; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 14px 16px 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 6px; border-bottom: 4px solid #15181d; }
+  .kick { font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #555b63; margin-bottom: 3px; }
+  .date { font-size: 48px; font-weight: 800; letter-spacing: -1.1px; line-height: 1; }
+  .key { display: grid; grid-template-columns: repeat(3, auto); gap: 3px 12px; font-size: 12.5px; font-weight: 700; color: #3d434b; }
+  .key span::before { content: ''; display: inline-block; width: 10px; height: 10px; background: var(--c); margin-right: 5px; }
+  .lead { display: flex; gap: 14px; align-items: center; margin-top: 7px; background: #fff; border-left: 9px solid var(--c); padding: 6px 14px; height: 112px; }
+  .lead svg { flex: 0 0 112px; }
+  .lead .place, .cell .place { font-weight: 800; text-transform: uppercase; color: var(--c); }
+  .lead .place { font-size: 12px; letter-spacing: 1.4px; }
+  .lead h1 { font-size: 29px; line-height: 1.05; letter-spacing: -0.5px; margin: 2px 0 3px; }
+  .lead p { font-size: 14px; line-height: 1.22; color: #3d434b; }
+  .lead .src, .cell .src { color: #7a8088; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 151px; gap: 6px; margin-top: 6px; }
+  .cell { position: relative; background: #fff; border-top: 5px solid var(--c); padding: 5px 7px 4px; overflow: hidden; display: flex; flex-direction: column; }
+  .pic { height: 38px; display: flex; align-items: center; justify-content: space-between; }
+  .fig { flex: 0 0 auto; font-size: 26px; font-weight: 800; letter-spacing: -1px; color: var(--c); line-height: 1; white-space: nowrap; }
+  .fig.long { font-size: 20px; }
+  .cell .place { flex: 0 1 auto; min-width: 0; font-size: 8.5px; letter-spacing: 0.1px; text-align: right; line-height: 1.1; max-width: 72px; margin-left: 3px; }
+  .cell h2 { font-size: 14px; line-height: 1.1; font-weight: 800; letter-spacing: -0.15px; margin-top: 4px; }
+  .cell p { font-size: 11px; line-height: 1.18; color: #474d55; margin-top: 3px; }
+  .cell .src { font-size: 9.5px; margin-top: auto; padding-top: 2px; }
+  .num { position: absolute; left: 0; top: 0; background: var(--c); color: #fff; font-size: 10px; font-weight: 800; padding: 0 4px 1px 3px; }
+  body.map .pic { padding-left: 14px; }
+  .note { background: #15181d; color: #e9e6de; border-top-color: #15181d; grid-column: span 2; }
+  .note h2 { color: #fff; font-size: 13px; letter-spacing: 1px; margin-top: 0; }
+  .note p { color: #d0d3d8; font-size: 12px; }
+  .mapcell { grid-column: span 2; border-top-color: #15181d; padding: 4px 6px; }
+  .mapcell h2 { font-size: 11px; letter-spacing: 1.2px; margin: 0 0 2px; }
+  footer { position: absolute; left: 16px; right: 16px; bottom: 5px; font-size: 10.5px; color: #555b63; white-space: nowrap; overflow: hidden; }
+  footer b { color: #15181d; }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="kick" id="kick"></div><div class="date" id="date"></div></div>
+  <div class="key" id="key"></div>
+</header>
+<section class="lead" id="lead"></section>
+<section class="grid" id="grid"></section>
+<footer id="foot"></footer>
+<script>
+  const withMap = new URLSearchParams(location.search).get('map') === '1';
+  if (withMap) document.body.classList.add('map');
+  const R = window.REGIONS;
+  const sorted = [...window.STORIES].sort((a, b) => a.rank - b.rank);
+  document.getElementById('date').textContent = window.DAY;
+  document.getElementById('kick').textContent = `THE WORLD’S NEWS IN ${sorted.length + 1} PICTURES`;
+  document.getElementById('key').innerHTML = ['eu', 'me', 'as', 'af', 'am', 'gl'].map((r) => `<span style="--c:${R[r].color}">${R[r].name}</span>`).join('');
+  const L = window.LEAD;
+  const lead = document.getElementById('lead');
+  lead.style.setProperty('--c', R[L.region].color);
+  const flags = `<svg width="112" height="94" viewBox="0 0 168 150" aria-hidden="true">
+    <rect x="4" y="18" width="4" height="128" fill="#555"/><g transform="translate(8,20)"><rect width="46" height="32" fill="#fff"/>
+      <rect width="46" height="4.6" fill="#b22234"/><rect y="9.2" width="46" height="4.6" fill="#b22234"/><rect y="18.4" width="46" height="4.6" fill="#b22234"/><rect y="27.4" width="46" height="4.6" fill="#b22234"/><rect width="20" height="17" fill="#3c3b6e"/></g>
+    <rect x="60" y="6" width="4" height="140" fill="#555"/><g transform="translate(64,8)"><rect width="46" height="32" fill="#de2910"/>
+      <polygon points="9,4 10.8,9.4 16.5,9.4 11.9,12.7 13.7,18 9,14.8 4.3,18 6.1,12.7 1.5,9.4 7.2,9.4" fill="#ffde00"/></g>
+    <rect x="116" y="18" width="4" height="128" fill="#555"/><g transform="translate(120,20)"><rect width="46" height="32" fill="#fff" stroke="#ccc" stroke-width="0.6"/>
+      <rect y="10.7" width="46" height="10.7" fill="#0039a6"/><rect y="21.4" width="46" height="10.6" fill="#d52b1e"/></g>
+    <rect x="0" y="118" width="168" height="10" rx="3" fill="#15181d"/></svg>`;
+  lead.innerHTML = `${flags}<div><div class="place">${withMap ? '1 · ' : ''}${L.place}</div><h1>${L.head}</h1><p>${L.detail} <span class="src">${L.src.slice(0, 2).join(' · ')}</span></p></div>`;
+  const cells = sorted.map((s, i) => {
+    const c = R[s.region].color;
+    const pic = s.fig ? `<span class="fig${s.fig.length > 4 ? ' long' : ''}">${s.fig}</span>` : window.icon(s.icon, 36, c);
+    const num = withMap ? `<span class="num">${i + 2}</span>` : '';
+    return `<div class="cell" style="--c:${c}">${num}<div class="pic">${pic}<span class="place">${s.place}</span></div><h2>${s.short}</h2><p>${s.detail}</p><div class="src">${s.src.slice(0, 2).join(' · ')}</div></div>`;
+  });
+  if (withMap) {
+    const items = [{ n: 1, ll: [22.5, 114.1], color: R[L.region].color }, ...sorted.map((s, i) => ({ n: i + 2, ll: s.ll, color: R[s.region].color }))];
+    cells.push(`<div class="cell mapcell"><h2>WHERE IT HAPPENED</h2>${window.locatorMap(270, items, { r: 6.2 })}</div>`);
+    document.getElementById('foot').innerHTML = `<b>Each story checked against two or more outlets.</b> Date check: ${window.NOT_THIS_DAY}`;
+  } else {
+    cells.push(`<div class="cell note"><h2>DATE CHECK</h2><p>${window.NOT_THIS_DAY}</p></div>`);
+    document.getElementById('foot').innerHTML = `<b>Each story checked against two or more outlets</b>; the first two are named under it.`;
+  }
+  document.getElementById('grid').innerHTML = cells.join('');
+</script>
+</body>
+</html>

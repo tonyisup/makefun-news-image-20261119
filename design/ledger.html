@@ -1,0 +1,72 @@
+<!doctype html>
+<!--
+  Direction A, "region ledger": the lead across the top, then all 29 other stories of
+  19 November 2026 in three columns, grouped by region, each a bold headline and one line of
+  detail. No map, no illustrations: type and region colour carry it.
+  Content: design/stories.js. Render: ./render.sh design/ledger.html <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - region ledger</title>
+<script src="stories.js"></script>
+<script src="icons.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { background: #fbfaf6; color: #15181d; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 20px 24px 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 5px solid #15181d; padding-bottom: 8px; }
+  .date { font-size: 52px; font-weight: 800; letter-spacing: -1.2px; line-height: 1; }
+  .kick { font-size: 15px; font-weight: 700; letter-spacing: 2.5px; color: #555b63; margin-bottom: 5px; }
+  .count { text-align: right; font-size: 16px; font-weight: 700; color: #555b63; line-height: 1.25; }
+  .lead { display: flex; gap: 16px; align-items: center; margin-top: 10px; padding: 9px 16px; background: #fff; border-left: 10px solid var(--c); box-shadow: 0 0 0 1px #e4e1d8; }
+  .lead .place { font-size: 14px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--c); }
+  .lead h1 { font-size: 31px; line-height: 1.05; letter-spacing: -0.5px; margin: 2px 0 4px; }
+  .lead p { font-size: 15.5px; line-height: 1.26; color: #3d434b; }
+  .cols { column-count: 3; column-gap: 20px; column-fill: balance; margin-top: 10px; height: 742px; }
+  .region { font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #fff; background: var(--c); padding: 2px 7px; margin: 2px 0 2px; display: inline-block; }
+  .head-pair { break-inside: avoid; }
+  .group { margin-bottom: 6px; }
+  .item { break-inside: avoid; display: flex; gap: 7px; padding: 3px 0 4px; border-bottom: 1px solid #e2dfd6; }
+  .item:last-child { border-bottom: none; }
+  .item svg { flex: 0 0 19px; margin-top: 1px; }
+  .item h2 { font-size: 15.5px; line-height: 1.13; font-weight: 800; letter-spacing: -0.15px; }
+  .item p { font-size: 13px; line-height: 1.2; color: #474d55; margin-top: 1px; }
+  .item .pl { font-weight: 700; color: var(--c); }
+  footer { position: absolute; left: 24px; right: 24px; bottom: 8px; font-size: 11.5px; color: #555b63; line-height: 1.35; border-top: 1px solid #cfcbc0; padding-top: 4px; }
+  footer b { color: #15181d; }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="kick">THE WORLD’S NEWS ON ONE PAGE</div><div class="date" id="date"></div></div>
+  <div class="count" id="count"></div>
+</header>
+<section class="lead" id="lead"></section>
+<section class="cols" id="cols"></section>
+<footer id="foot"></footer>
+<script>
+  const R = window.REGIONS;
+  document.getElementById('date').textContent = window.DAY;
+  document.getElementById('count').innerHTML = `${window.STORIES.filter((s) => !s.extra).length + 1} stories<br>by region`;
+  const L = window.LEAD;
+  const lead = document.getElementById('lead');
+  lead.style.setProperty('--c', R[L.region].color);
+  lead.innerHTML = `<div><div class="place">${L.place}</div><h1>${L.head}</h1><p>${L.detail}</p></div>`;
+  const order = ['gl', 'eu', 'me', 'as', 'af', 'am'];
+  const cols = document.getElementById('cols');
+  for (const r of order) {
+    const items = window.STORIES.filter((s) => s.region === r && !s.extra).sort((a, b) => a.rank - b.rank);
+    const g = document.createElement('div');
+    g.className = 'group';
+    g.style.setProperty('--c', R[r].color);
+    const row = (s) => `<div class="item">${window.icon(s.icon, 19, R[r].color)}<div><h2>${s.head}</h2><p><span class="pl">${s.place}.</span> ${s.detail}</p></div></div>`;
+    // The region label travels with its first story, so a column never ends on a bare label.
+    g.innerHTML = `<div class="head-pair"><div class="region">${R[r].name}</div>${row(items[0])}</div>` + items.slice(1).map(row).join('');
+    cols.appendChild(g);
+  }
+  const outlets = ['Reuters', 'AP', 'BBC', 'The Guardian', 'DW', 'Al Jazeera', 'Washington Post', 'Yonhap', 'The Hindu', 'ABC (Aus)', 'Kyodo', 'Anadolu'];
+  document.getElementById('foot').innerHTML = `<b>Each story checked against two or more outlets</b>, incl. ${outlets.join(', ')}.<br><b>Date check.</b> ${window.NOT_THIS_DAY}`;
+</script>
+</body>
+</html>

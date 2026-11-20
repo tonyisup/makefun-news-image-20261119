@@ -1,0 +1,77 @@
+<!doctype html>
+<!--
+  Direction C, "ranked": the 30 stories of 19 November 2026 as one numbered list, most
+  consequential first. 1 is the lead; 2-10 large in two columns; 11-30 compact in two
+  columns. A region colour key replaces any map.
+  Content: design/stories.js. Render: ./render.sh design/ranked.html <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - ranked</title>
+<script src="stories.js"></script>
+<script src="icons.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { background: #111418; color: #f2efe8; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 20px 24px 0; }
+  header { border-bottom: 3px solid #f2efe8; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .kick { font-size: 14px; font-weight: 700; letter-spacing: 2.5px; color: #a9b0b9; margin-bottom: 4px; }
+  .date { font-size: 52px; font-weight: 800; letter-spacing: -1.2px; line-height: 1; }
+  .key { display: grid; grid-template-columns: repeat(3, auto); gap: 3px 12px; font-size: 12.5px; font-weight: 700; color: #d5d9de; }
+  .key span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c); margin-right: 5px; }
+  .n { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--c); color: #fff; font-weight: 800; }
+  .lead { display: flex; gap: 14px; align-items: center; margin-top: 10px; padding-bottom: 8px; border-bottom: 1px solid #39404a; }
+  .lead .n { width: 46px; height: 46px; font-size: 24px; }
+  .lead h1 { font-size: 31px; line-height: 1.05; letter-spacing: -0.4px; }
+  .lead p { font-size: 15px; line-height: 1.25; color: #c3c8cf; margin-top: 4px; }
+  .big { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; margin-top: 8px; }
+  .row { display: flex; gap: 10px; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #2c323a; }
+  .big .n { width: 30px; height: 30px; font-size: 15px; }
+  .big h2 { font-size: 18px; line-height: 1.12; letter-spacing: -0.2px; }
+  .big p { font-size: 13.5px; line-height: 1.22; color: #b9bfc7; margin-top: 2px; }
+  .small { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; margin-top: 6px; }
+  .small .row { padding: 3px 0; }
+  .small .n { width: 22px; height: 22px; font-size: 11.5px; margin-top: 1px; }
+  .small h3 { font-size: 14.5px; line-height: 1.15; }
+  .small p { font-size: 12.5px; line-height: 1.18; color: #aab1ba; margin-top: 1px; }
+  .pl { color: var(--c2); font-weight: 700; }
+  footer { position: absolute; left: 24px; right: 24px; bottom: 8px; font-size: 11.5px; color: #a9b0b9; line-height: 1.35; border-top: 1px solid #39404a; padding-top: 4px; }
+  footer b { color: #f2efe8; }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="kick">THE DAY IN 30 STORIES, MOST CONSEQUENTIAL FIRST</div><div class="date" id="date"></div></div>
+  <div class="key" id="key"></div>
+</header>
+<section class="lead" id="lead"></section>
+<section class="big" id="big"></section>
+<section class="small" id="small"></section>
+<footer id="foot"></footer>
+<script>
+  // Region colours brightened for a dark page.
+  const R = window.REGIONS;
+  const bright = { eu: '#6f9fe6', me: '#e8914a', as: '#ef6b6b', af: '#5cc485', am: '#b38ae0', gl: '#4fb6d6' };
+  document.getElementById('date').textContent = window.DAY;
+  document.getElementById('key').innerHTML = ['eu', 'me', 'as', 'af', 'am', 'gl'].map((r) => `<span style="--c:${R[r].color}">${R[r].name}</span>`).join('');
+  const L = window.LEAD;
+  document.getElementById('lead').innerHTML = `<span class="n" style="--c:${R[L.region].color}">1</span><div><h1>${L.head}</h1><p><span class="pl" style="--c2:${bright[L.region]}">${L.place}.</span> ${L.detail}</p></div>`;
+  const sorted = [...window.STORIES.filter((s) => !s.extra)].sort((a, b) => a.rank - b.rank);
+  const row = (s, i, tag) => `<div class="row"><span class="n" style="--c:${R[s.region].color}">${i}</span><div><${tag}>${s.head}</${tag}><p><span class="pl" style="--c2:${bright[s.region]}">${s.place}.</span> ${s.detail}</p></div></div>`;
+  // Fill each two-column block down the left column first, then the right.
+  const twoCols = (items, start, tag) => {
+    const half = Math.ceil(items.length / 2);
+    const out = [];
+    for (let k = 0; k < half; k++) {
+      out.push(row(items[k], start + k, tag));
+      if (items[k + half]) out.push(row(items[k + half], start + k + half, tag));
+    }
+    return out.join('');
+  };
+  document.getElementById('big').innerHTML = twoCols(sorted.slice(0, 10), 2, 'h2');
+  document.getElementById('small').innerHTML = twoCols(sorted.slice(10), 12, 'h3');
+  document.getElementById('foot').innerHTML = `<b>Each story checked against two or more outlets</b> (Reuters, AP, BBC, The Guardian, DW, Al Jazeera, Washington Post, Yonhap, The Hindu, Kyodo and others).<br><b>Date check.</b> ${window.NOT_THIS_DAY}`;
+</script>
+</body>
+</html>

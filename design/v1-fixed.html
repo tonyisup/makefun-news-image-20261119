@@ -1,0 +1,273 @@
+<!doctype html>
+<!--
+  One-page summary of the world's news on Thursday 19 November 2026.
+  v1 with the Kerch tile corrected: the third strike was 18 Nov; Putin's response is the 19th's news.
+  Render: ./render.sh design/v1-fixed.html <out.png>
+  Every story was checked against at least two outlets; see ../SOURCES.md.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - the world's news</title>
+<style>
+  :root {
+    --paper: #f5f1e8;
+    --ink: #1a1d22;
+    --muted: #4a4f57;
+    --asia: #b02a30;
+    --europe: #2a5aa0;
+    --mideast: #b05a14;
+    --justice: #6a3d8f;
+    --climate: #2c7a46;
+    --markets: #1f6f8b;
+    --arctic: #3d6a8a;
+    --culture: #a23b72;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding: 22px 24px 0 24px;
+  }
+
+  /* ---------- masthead ---------- */
+  header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-bottom: 4px solid var(--ink);
+    padding-bottom: 10px;
+  }
+  .kicker { font-size: 18px; font-weight: 700; letter-spacing: 3px; color: var(--muted); }
+  .date { font-size: 56px; font-weight: 800; letter-spacing: -1px; line-height: 1.0; margin-top: 4px; }
+  .side { text-align: right; font-size: 17px; color: var(--muted); line-height: 1.3; font-weight: 600; }
+
+  /* ---------- lead story ---------- */
+  .lead {
+    display: flex; gap: 22px; align-items: center;
+    margin-top: 12px;
+    background: #fff;
+    border-left: 10px solid var(--asia);
+    padding: 12px 20px 12px 18px;
+    height: 172px;
+  }
+  .lead svg { flex: 0 0 150px; }
+  .lead .tag { color: var(--asia); }
+  .lead h1 { font-size: 36px; line-height: 1.06; font-weight: 800; letter-spacing: -0.5px; margin: 4px 0 6px 0; }
+  .lead p { font-size: 19px; line-height: 1.28; color: var(--muted); }
+
+  /* ---------- tiles ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+    height: 664px;
+  }
+  .tile {
+    background: #fff;
+    border-top: 7px solid var(--c);
+    padding: 9px 14px 8px 14px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .top { display: flex; align-items: center; gap: 10px; }
+  .top svg { flex: 0 0 46px; }
+  .tag { font-size: 15px; font-weight: 800; letter-spacing: 1.5px; color: var(--c); text-transform: uppercase; line-height: 1.15; }
+  .tile h2 { font-size: 25px; line-height: 1.1; font-weight: 800; letter-spacing: -0.3px; margin-top: 7px; }
+  .tile p { font-size: 17px; line-height: 1.25; color: var(--muted); margin-top: 5px; }
+
+  footer {
+    margin-top: 7px;
+    font-size: 13px; color: var(--muted); letter-spacing: 0.2px;
+    display: flex; justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="kicker">THE WORLD'S NEWS IN ONE PAGE</div>
+    <div class="date">Thursday 19 November 2026</div>
+  </div>
+  <div class="side">10 stories<br>from that day</div>
+</header>
+
+<!-- Lead: US-China-Russia summit -->
+<section class="lead">
+  <svg width="150" height="134" viewBox="0 0 168 150" aria-hidden="true">
+    <!-- three flags on poles: US, China, Russia -->
+    <g>
+      <rect x="4" y="18" width="4" height="128" fill="#555"/>
+      <g transform="translate(8,20)">
+        <rect width="46" height="32" fill="#fff"/>
+        <rect y="0" width="46" height="4.6" fill="#b22234"/><rect y="9.2" width="46" height="4.6" fill="#b22234"/>
+        <rect y="18.4" width="46" height="4.6" fill="#b22234"/><rect y="27.4" width="46" height="4.6" fill="#b22234"/>
+        <rect width="20" height="17" fill="#3c3b6e"/>
+      </g>
+    </g>
+    <g>
+      <rect x="60" y="6" width="4" height="140" fill="#555"/>
+      <g transform="translate(64,8)">
+        <rect width="46" height="32" fill="#de2910"/>
+        <polygon points="9,4 10.8,9.4 16.5,9.4 11.9,12.7 13.7,18 9,14.8 4.3,18 6.1,12.7 1.5,9.4 7.2,9.4" fill="#ffde00"/>
+      </g>
+    </g>
+    <g>
+      <rect x="116" y="18" width="4" height="128" fill="#555"/>
+      <g transform="translate(120,20)">
+        <rect width="46" height="32" fill="#fff" stroke="#ccc" stroke-width="0.6"/>
+        <rect y="10.7" width="46" height="10.7" fill="#0039a6"/>
+        <rect y="21.4" width="46" height="10.6" fill="#d52b1e"/>
+      </g>
+    </g>
+    <!-- table -->
+    <rect x="0" y="118" width="168" height="10" rx="3" fill="#1a1d22"/>
+  </svg>
+  <div>
+    <div class="tag" style="font-size:16px">Asia · Diplomacy · APEC, Shenzhen</div>
+    <h1>Trump, Xi and Putin hold first three-way summit, in Shenzhen, China</h1>
+    <p>They issue a symbolic “peace declaration”: nuclear war must never be fought. No arms‑control talks announced; the wars in Ukraine and Iran go unmentioned.</p>
+  </div>
+</section>
+
+<section class="grid">
+
+  <!-- 1 Kerch Bridge -->
+  <div class="tile" style="--c: var(--europe)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <g fill="none" stroke="var(--europe)" stroke-width="3.4" stroke-linecap="round">
+          <path d="M1 24 H16"/><path d="M30 24 H45"/>
+          <path d="M8 24 V42"/><path d="M38 24 V42"/>
+          <path d="M16 24 L19 31"/><path d="M30 24 L27 31"/>
+        </g>
+        <path d="M1 43 H45" stroke="#7fa3cf" stroke-width="2.4"/>
+        <polygon points="23,6 25.5,12.5 32,10 28.5,16 34,19.5 27,20.5 23,26 19,20.5 12,19.5 17.5,16 14,10 20.5,12.5" fill="#d6452a"/>
+      </svg>
+      <div class="tag">Ukraine war · Russia</div>
+    </div>
+    <h2>Putin rules out truce talks after Kerch Bridge strikes</h2>
+    <p>Vows a “painful” response to this week’s attacks.</p>
+  </div>
+
+  <!-- 2 Berlin -->
+  <div class="tile" style="--c: var(--europe)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46"><g fill="var(--europe)">
+        <rect x="3" y="8" width="40" height="6"/><rect x="1" y="14" width="44" height="3"/>
+        <rect x="5" y="17" width="4" height="23"/><rect x="13" y="17" width="4" height="23"/>
+        <rect x="21" y="17" width="4" height="23"/><rect x="29" y="17" width="4" height="23"/>
+        <rect x="37" y="17" width="4" height="23"/><rect x="1" y="40" width="44" height="4"/>
+      </g></svg>
+      <div class="tag">Europe · Berlin</div>
+    </div>
+    <h2>Ukraine’s allies meet Zelensky in Berlin</h2>
+    <p>US envoy Kushner: Russia is “comfortable” with NATO-like security guarantees.</p>
+  </div>
+
+  <!-- 3 ICJ -->
+  <div class="tile" style="--c: var(--justice)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46"><g fill="none" stroke="var(--justice)" stroke-width="3" stroke-linecap="round">
+        <path d="M23 5 V40"/><path d="M8 11 H38"/><path d="M14 43 H32"/>
+        <path d="M8 11 L2 26 H14 Z"/><path d="M38 11 L32 26 H44 Z"/>
+      </g></svg>
+      <div class="tag">Justice · The Hague</div>
+    </div>
+    <h2>World Court: Myanmar committed genocide against Rohingya</h2>
+    <p>A first for the court. The Gambia brought the case.</p>
+  </div>
+
+  <!-- 4 Riyadh -->
+  <div class="tile" style="--c: var(--mideast)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <path d="M17 44 V12 L23 3 L29 12 V44 Z" fill="var(--mideast)"/>
+        <g stroke="#d6452a" stroke-width="2.6" stroke-linecap="round"><path d="M33 16 L41 12"/><path d="M33 22 L43 22"/><path d="M33 28 L41 32"/></g>
+        <rect x="20" y="18" width="6" height="4" fill="#fff"/>
+      </svg>
+      <div class="tag">Iran war · Saudi Arabia</div>
+    </div>
+    <h2>Houthi strike damages Riyadh’s tallest tower</h2>
+    <p>Saudi wealth fund (PIF) building hit; no injuries reported.</p>
+  </div>
+
+  <!-- 5 Gaza -->
+  <div class="tile" style="--c: var(--mideast)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46"><g fill="var(--mideast)">
+        <rect x="4" y="26" width="38" height="10" rx="5"/>
+        <rect x="9" y="18" width="18" height="9" rx="2"/>
+        <rect x="26" y="20" width="18" height="3"/>
+      </g><g fill="#fff"><circle cx="11" cy="31" r="2"/><circle cx="18" cy="31" r="2"/><circle cx="25" cy="31" r="2"/><circle cx="32" cy="31" r="2"/></g></svg>
+      <div class="tag">Middle East · Gaza</div>
+    </div>
+    <h2>Israel ends tank raid in central Gaza</h2>
+    <p>Biggest push past the ceasefire line since the 2025 truce; families return to Nuseirat.</p>
+  </div>
+
+  <!-- 6 COP31 -->
+  <div class="tile" style="--c: var(--climate)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <circle cx="23" cy="23" r="19" fill="none" stroke="var(--climate)" stroke-width="3"/>
+        <path d="M23 9 C17 18 15 22 15 26 A8 8 0 0 0 31 26 C31 22 29 18 23 9 Z" fill="#1a1d22"/>
+        <path d="M9 37 L37 9" stroke="#d6452a" stroke-width="3.4" stroke-linecap="round"/>
+      </svg>
+      <div class="tag">Climate · Türkiye</div>
+    </div>
+    <h2>COP31 draft deal drops all mention of fossil fuels</h2>
+    <p>Talks in Antalya near their Friday deadline.</p>
+  </div>
+
+  <!-- 7 Anthropic -->
+  <div class="tile" style="--c: var(--markets)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46"><g fill="none" stroke="var(--markets)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4 V42 H44"/><path d="M9 34 L18 25 L25 30 L40 12"/><path d="M31 12 H40 V21"/>
+      </g></svg>
+      <div class="tag">Markets · New York</div>
+    </div>
+    <h2>Anthropic shares jump 17% in Nasdaq debut</h2>
+    <p>Priced at $83, closed at $97.17. Ticker: ANT.</p>
+  </div>
+
+  <!-- 8 Greenland -->
+  <div class="tile" style="--c: var(--arctic)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <path d="M23 3 L41 9 V22 C41 33 33 40 23 44 C13 40 5 33 5 22 V9 Z" fill="var(--arctic)"/>
+        <path d="M14 23 L21 30 L33 16" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="tag">Arctic · Denmark</div>
+    </div>
+    <h2>Danish MPs ratify Greenland security pact with US</h2>
+    <p>Unanimous vote, <span style="white-space:nowrap">109–0</span>.</p>
+  </div>
+
+  <!-- 9 GTA VI -->
+  <div class="tile" style="--c: var(--culture)">
+    <div class="top">
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <path d="M10 14 H36 C42 14 45 22 45 30 C45 37 40 39 36 34 L32 30 H14 L10 34 C6 39 1 37 1 30 C1 22 4 14 10 14 Z" fill="var(--culture)"/>
+        <g stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M9 22 V28"/><path d="M6 25 H12"/></g>
+        <circle cx="33" cy="22" r="2" fill="#fff"/><circle cx="37" cy="26" r="2" fill="#fff"/>
+      </svg>
+      <div class="tag">Culture · Games</div>
+    </div>
+    <h2>Grand Theft Auto VI goes on sale worldwide</h2>
+    <p>First new game in the GTA series in 13 years.</p>
+  </div>
+
+</section>
+
+<footer>
+  <span>Sources: Reuters, AP, BBC, The Guardian, DW, NPR, Al Jazeera, CNN, Nikkei</span>
+  <span>Events reported 19 Nov 2026</span>
+</footer>
+
+</body>
+</html>

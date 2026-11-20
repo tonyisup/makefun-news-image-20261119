@@ -1,0 +1,106 @@
+<!doctype html>
+<!--
+  Direction B3, "front + briefs, 34": the lead, the ten biggest stories of 19 November 2026
+  as picture tiles (pictogram or key figure), then the other 23 as briefs by region, each
+  with the outlets it was checked against.
+  ?map=1 splits the lead band: the lead on the left, a numbered "where it happened" locator
+  map on the right (numbers match the tiles and briefs).
+  Content: design/stories.js. Render: ./render.sh "design/front34.html[?map=1]" <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - front page of 34</title>
+<script src="stories.js"></script>
+<script src="icons.js"></script>
+<script src="world.js"></script>
+<script src="map.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { background: #f3f0e8; color: #16191e; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 16px 18px 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #16191e; padding-bottom: 6px; }
+  .date { font-size: 48px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+  .kick { font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #555b63; margin-bottom: 4px; }
+  .key { display: grid; grid-template-columns: repeat(3, auto); gap: 3px 12px; font-size: 12px; font-weight: 700; color: #3d434b; }
+  .key span::before { content: ''; display: inline-block; width: 10px; height: 10px; background: var(--c); margin-right: 5px; }
+  .lead { display: flex; gap: 12px; align-items: center; margin-top: 8px; padding: 8px 14px; background: #fff; border-left: 9px solid var(--c); }
+  .lead .txt { flex: 1 1 auto; }
+  .lead .place, .tile .place { font-size: 12px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--c); }
+  .lead h1 { font-size: 29px; line-height: 1.05; letter-spacing: -0.5px; margin: 2px 0 4px; }
+  .lead p { font-size: 14.5px; line-height: 1.24; color: #3d434b; }
+  .lead .mapbox { flex: 0 0 auto; text-align: center; }
+  .lead .mapbox div { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; color: #555b63; }
+  .src { color: #7d838b; font-weight: 600; font-size: 10.5px; }
+  .tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin-top: 7px; }
+  .tile { position: relative; background: #fff; border-top: 6px solid var(--c); padding: 5px 9px 5px; height: 172px; overflow: hidden; display: flex; flex-direction: column; }
+  .tile .top { display: flex; align-items: center; justify-content: space-between; gap: 6px; height: 40px; }
+  .fig { font-size: 29px; font-weight: 800; letter-spacing: -1px; color: var(--c); white-space: nowrap; line-height: 1; }
+  .tile .place { text-align: right; font-size: 10.5px; max-width: 92px; line-height: 1.1; }
+  .tile h2 { font-size: 15.5px; line-height: 1.1; font-weight: 800; letter-spacing: -0.2px; margin-top: 4px; }
+  .tile p { font-size: 12px; line-height: 1.18; color: #474d55; margin-top: 3px; }
+  .tile .src { margin-top: auto; }
+  .num { position: absolute; left: 0; top: 0; background: var(--c); color: #fff; font-size: 10.5px; font-weight: 800; padding: 0 4px 1px 3px; }
+  body.map .tile .top { padding-left: 16px; }
+  body.map .tile { height: 160px; }
+  body.map .tile p { font-size: 11.5px; }
+  body.map .tile h2 { font-size: 15px; }
+  body.map .lead { padding: 4px 12px; }
+  body.map .lead h1 { font-size: 27px; }
+  body.map .lead p { font-size: 13.5px; }
+  .briefs-h { margin-top: 7px; font-size: 12.5px; font-weight: 800; letter-spacing: 2px; border-bottom: 2px solid #16191e; padding-bottom: 2px; }
+  .briefs { column-count: 4; column-gap: 14px; column-fill: balance; margin-top: 4px; height: 376px; }
+  .brief { break-inside: avoid; display: flex; gap: 6px; font-size: 12.5px; line-height: 1.17; padding: 2px 0 3px; border-bottom: 1px solid #ddd8cc; }
+  .brief svg, .brief .bn { flex: 0 0 20px; margin-top: 9px; }
+  .bn { height: 18px; border-radius: 50%; background: var(--c); color: #fff; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .brief b { font-size: 13px; }
+  .brief .pl { font-weight: 800; color: var(--c); font-size: 10.5px; letter-spacing: 0.8px; text-transform: uppercase; display: block; }
+  footer { position: absolute; left: 18px; right: 18px; bottom: 5px; font-size: 10.5px; color: #555b63; line-height: 1.3; border-top: 1px solid #c9c5ba; padding-top: 3px; }
+  footer b { color: #16191e; }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="kick" id="kick"></div><div class="date" id="date"></div></div>
+  <div class="key" id="key"></div>
+</header>
+<section class="lead" id="lead"></section>
+<section class="tiles" id="tiles"></section>
+<div class="briefs-h">ALSO ON THURSDAY, BY REGION</div>
+<section class="briefs" id="briefs"></section>
+<footer id="foot"></footer>
+<script>
+  const withMap = new URLSearchParams(location.search).get('map') === '1';
+  if (withMap) document.body.classList.add('map');
+  const R = window.REGIONS;
+  const sorted = [...window.STORIES].sort((a, b) => a.rank - b.rank);
+  document.getElementById('date').textContent = window.DAY;
+  document.getElementById('kick').textContent = `THE WORLD’S NEWS ON ONE PAGE · ${sorted.length + 1} STORIES`;
+  document.getElementById('key').innerHTML = ['eu', 'me', 'as', 'af', 'am', 'gl'].map((r) => `<span style="--c:${R[r].color}">${R[r].name}</span>`).join('');
+  // Number every story by consequence: 1 is the lead.
+  sorted.forEach((s, i) => { s.n = i + 2; });
+  const L = window.LEAD;
+  const lead = document.getElementById('lead');
+  lead.style.setProperty('--c', R[L.region].color);
+  const leadText = `<div class="txt"><div class="place">${withMap ? '1 · ' : ''}${L.place}</div><h1>${L.head}</h1><p>${L.detail} <span class="src">${L.src.slice(0, 2).join(' · ')}</span></p></div>`;
+  if (withMap) {
+    const items = [{ n: 1, ll: [22.5, 114.1], color: R[L.region].color }, ...sorted.map((s) => ({ n: s.n, ll: s.ll, color: R[s.region].color }))];
+    lead.innerHTML = leadText + `<div class="mapbox"><div>WHERE IT HAPPENED</div>${window.locatorMap(372, items, { r: 6.3 })}</div>`;
+  } else {
+    lead.innerHTML = leadText;
+  }
+  const front = sorted.slice(0, 10);
+  const rest = sorted.slice(10);
+  const num = (s) => (withMap ? `<span class="num">${s.n}</span>` : '');
+  document.getElementById('tiles').innerHTML = front.map((s) =>
+    `<div class="tile" style="--c:${R[s.region].color}">${num(s)}<div class="top">${s.fig ? `<span class="fig">${s.fig}</span>` : window.icon(s.icon, 38, R[s.region].color)}<span class="place">${s.place}</span></div><h2>${s.head}</h2><p>${s.detail}</p><div class="src">${s.src.slice(0, 2).join(' · ')}</div></div>`).join('');
+  const order = ['eu', 'me', 'as', 'af', 'am', 'gl'];
+  rest.sort((a, b) => order.indexOf(a.region) - order.indexOf(b.region) || a.rank - b.rank);
+  document.getElementById('briefs').innerHTML = rest.map((s) => {
+    const mark = withMap ? `<span class="bn">${s.n}</span>` : window.icon(s.icon, 20, R[s.region].color);
+    return `<div class="brief" style="--c:${R[s.region].color}">${mark}<div><span class="pl">${s.place}</span><b>${s.head}.</b> <span class="src">${s.src.slice(0, 2).join(', ')}</span></div></div>`;
+  }).join('');
+  document.getElementById('foot').innerHTML = `<b>Each story checked against two or more outlets</b>; the first two are named with it.<br><b>Date check.</b> ${window.NOT_THIS_DAY}`;
+</script>
+</body>
+</html>

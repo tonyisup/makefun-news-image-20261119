@@ -1,28 +1,57 @@
 # Sources: what the image says, and who reported it
 
-Every story in `entry.png` happened, or was first reported, on Thursday
-19 November 2026, and each was checked against at least two outlets before it
-went in. Stories considered and left out are listed at the end with the reason.
+Every story in `entry.png` happened, or was first reported, on Thursday 19 November 2026,
+and each was checked against at least two outlets before it went in. The labels come from
+`design/stories.js`, which every layout reads, so the words are the same in every candidate.
+Stories considered and left out are listed at the end with the reason.
 
-| # | Label in the image | Checked against |
+| # | Story (label in the image) | Checked against |
 |---|---|---|
-| Lead | Trump, Xi and Putin hold first three-way summit, in Shenzhen, China. Symbolic "peace declaration": nuclear war must never be fought; no arms-control talks; Ukraine and Iran wars unmentioned | Reuters ("Trump, Xi and Putin release 'peace declaration' from unprecedented summit", Nov 19); AP ("Trump, Xi and Putin hold rare 3-way talks on nuclear risks but deliver no breakthroughs"); The Guardian ("China, Russia and US agree peace declaration with no mention of Ukraine and Iran wars") |
-| 1 | Ukraine hits Kerch Bridge again; Putin vows "painful" reply. Third strike this week; Putin drops the idea of an energy and sea truce | Reuters ("Putin says he will hit back hard after Ukraine strikes Crimea Bridge again", Nov 19); The Guardian ("Putin vows 'painful' response to Ukraine's bombing of Kerch bridge", Nov 19) |
-| 2 | Ukraine's allies meet Zelensky in Berlin. Kushner: Russia "comfortable" with NATO-like security guarantees | AP via PBS/ITV (Berlin, Nov 19); DW live ("Ukraine's 'coalition' allies attend summit in Berlin"); The Guardian live (Nov 19) |
-| 3 | World Court: Myanmar committed genocide against Rohingya. A first for the court; The Gambia brought the case | Reuters ("Top UN court finds Myanmar committed genocide...", Nov 19); BBC; NPR; UN News; CNN; UN Web TV (judgment delivered 19 Nov 2026) |
-| 4 | Houthi strike damages Riyadh's tallest tower. PIF building hit; no injuries reported | Reuters ("Riyadh's tallest skyscraper hit in Houthi strike on Saudi wealth fund HQ", Nov 19); Al Jazeera; The New York Times |
-| 5 | Israel ends tank raid in central Gaza. Biggest push past the ceasefire line since the 2025 truce; families return to Nuseirat | Reuters ("Gazans return to battered camp after Israel says it concluded tank raid", Nov 19); The Hindu; Ahram Online |
-| 6 | COP31 draft deal drops all mention of fossil fuels. Talks in Antalya near their Friday deadline | Reuters ("COP31 draft drops fossil fuel language as talks near deadline", Nov 19); The Guardian; DW; Le Monde |
-| 7 | Anthropic shares jump 17% in Nasdaq debut. Priced at $83, closed at $97.17; ticker ANT | Nikkei Asia ("Anthropic closes 17% above IPO price after 34% opening surge"); CNN; Fortune; WSJ live coverage (Nov 19) |
-| 8 | Danish MPs ratify Greenland security pact with US. Unanimous vote, 109-0 | The Guardian ("Danish MPs approve Greenland security pact with US", Nov 19); AP; Reuters; Al Jazeera |
-| 9 | Grand Theft Auto VI goes on sale worldwide. First new game in the GTA series in 13 years | Reuters via Yahoo Finance ("Take-Two set to shatter sales records as 'GTA VI' launches", Nov 19); USA Today ("GTA 6 released today", Nov 19); Deadline; Rockstar Games (launch date) |
+| Lead | Trump, Xi and Putin hold their first three-way summit (Shenzhen, APEC): a symbolic "peace declaration" that nuclear war must never be fought; no arms-control talks; Ukraine and Iran wars unmentioned; Xi tells the US to do "the right thing" on Taiwan | Reuters ("Trump, Xi and Putin release 'peace declaration' from unprecedented summit"; "China's Xi says US should do 'right thing' on Taiwan"); AP; The Guardian |
+| 2 | ICJ: Myanmar committed genocide against the Rohingya, 9–6, the court's first such ruling; The Gambia's case | Reuters; BBC; UN News and UN media (the 9–6 operative clause); DW; CNN; NYT; The Guardian |
+| 3 | Putin rules out truce talks after the Kerch Bridge strikes; vows a "painful" response | Boston Globe/NYT (Shenzhen, Thursday); RTÉ (19 Nov); AAP; Reuters. The third strike itself was 18 Nov (CNN, UPI, Al Jazeera), so it is not shown as the 19th's news |
+| 4 | Dow drops 1,101 points; S&P 500 −2%, a sixth straight loss, longest since 2024 | AP via LA Times; Washington Post; Yahoo Finance |
+| 5 | COP31 draft drops fossil fuels; talks near their Friday deadline | Reuters; The Guardian; DW; Le Monde |
+| 6 | Anthropic up 17% in its IPO: priced at $83, closed at $97.17 (ANT) | Nikkei Asia; CNN; TechCrunch ("largest IPO in history"); Fortune |
+| 7 | Senate rejects the Iran war-powers curb, 51–48; three Republicans break ranks | Washington Post; USA Today; The Guardian; Al Jazeera; C-SPAN |
+| 8 | Allies meet Zelensky in Berlin; US envoy Kushner: Russia "comfortable" with NATO-like guarantees | AP via PBS; DW; The Guardian |
+| 9 | Tankers hit mines near Hormuz; Iran's navy reports the blasts; UKMTO logs a tanker strike off Oman | Anadolu ("Two oil tankers catch fire Thursday"); Al Jazeera live (19 Nov); A News |
+| 10 | Houthi strike hits Riyadh's tallest tower, the PIF building; no injuries reported | Reuters; Al Jazeera; Washington Post (the Saudi-led coalition calls it missile debris) |
+| 11 | Israel ends its Gaza tank raid: the deepest push past the truce line since 2025; families return to Nuseirat | Reuters; The Hindu; Ahram Online |
+| 12 | Israel strikes Hezbollah in Bekaa, its first strike that far into Lebanon in months | Haaretz; Jerusalem Post; Anadolu; Xinhua |
+| 13 | Coalition hits Houthi launchers; says it downed five ballistic missiles and a cruise missile | SPA; Al Arabiya; Anadolu; Saudi Gazette |
+| 14 | Denmark ratifies the Greenland pact with the US, 109–0 | The Guardian; AP; Reuters; Al Jazeera |
+| 15 | Somalia expels the UAE envoy, citing "invasion"; 72 hours to leave | Reuters; Al Jazeera; Africanews; CNA |
+| 16 | Korea: retrial for ex-PM Han over martial law; ex-first lady Kim's 4-year term upheld | Yonhap; DW; Al Jazeera |
+| 17 | Cyclone Akvan nears India; Odisha evacuates tens of thousands | The Hindu (19 Nov); Times of India; IMD bulletin 28 |
+| 18 | EU hit by an AI-driven cyberattack on staff HR systems | DW; Euronews |
+| 19 | Takaichi leaves China without Xi talks | Kyodo; Mainichi; Anadolu |
+| 20 | Trump: $17bn of Southeast Asia deals, incl. 20 Boeing 787s for Philippine Airlines | Reuters; CNA; Business Times; The Edge |
+| 21 | Colombia national strike against the tax rescue law | Caracol; Colombia.com; Alerta; La República |
+| 22 | Australia's jobless rate 4.9%, highest in five years | ABS (released 19/11/2026); ABC; The Guardian |
+| 23 | South Korea's yearly exports top $1 trillion, a first | News1 (2:09 pm KST, 19 Nov); Seoul Economic Daily |
+| 24 | France confirms troops in Ukraine train and repair | RTL; Anadolu; BFMTV; Euronews |
+| 25 | South Africa holds its rate at 7.25%, split vote | BusinessDay; Mail & Guardian; SAnews; TimesLIVE |
+| 26 | Kenya picks a US-led group for the Mrima Hill rare-earth mine | Reuters via CNBC Africa; Mining.com; AllAfrica |
+| 27 | Pakistan says 22 militants killed near the Afghan border | AP via ABC/NBC/Washington Post; Xinhua; Al Arabiya |
+| 28 | GTA VI goes on sale, the first new GTA game in 13 years | Rockstar Games; Take-Two; Reuters via Yahoo Finance; Deadline |
+| 29 | Jepchirchir banned three years for EPO | The Guardian; AFP; Al Jazeera; NYT Athletic; Xinhua |
+| 30 | 24 sperm whales strand in NZ; most have died | RNZ; NZ Herald |
 
-## Considered and left out
+Checked and held for the 34-story candidates (`extra` in `stories.js`): Haiti police say 34
+gang members killed (Reuters, AP); Albanese tells Putin at APEC to end his war (The Guardian,
+ABC, SBS); Korea's college exam day with flights grounded (Yonhap, Korea Herald, AFP);
+France raises its bird-flu risk to "high" (RFI, Anadolu, franceinfo).
 
-- Van Gogh auction record ($190.4M): the sale was on the evening of Wednesday 18 November in New York.
-- Voyager 1 reaching one light-day from Earth: reached and reported on 18 November.
-- Sudan court sentences RSF leader Hemedti to death: dated 18 November by AA and Sudan Tribune.
-- Iran strikes on Kuwait and Bahrain: Wednesday 18 November.
-- Cyclone Akvan (Odisha evacuates ~50,000): verified, but evacuations began on the 18th; kept as an alternate.
-- Colombia national strike against the "Economic Rescue Law": verified (Caracol, La Republica, AA); swapped out for GTA VI at the entrant's choice.
-- South Africa's central bank holds at 7.25%: verified; less consequential than the stories above.
+## Considered and left out (not 19 November news)
+
+- The Kerch Bridge strike itself, the third that week: 18 November (CNN, UPI, Al Jazeera).
+- The $190.4m van Gogh auction record: the evening of 18 November in New York.
+- The EU's €45bn Ukraine loan proposal: 18 November (The Guardian, Le Monde, Euronews).
+- The UK–EU summit in Brussels: 20 November (EEAS, gov.uk).
+- Fed minutes ("almost all see more hikes"): released 18 November.
+- Hegseth's US–Venezuela military deal: announced 18 November in Caracas.
+- Voyager 1 reaching one light-day from Earth: 18 November.
+- Sudan court sentences Hemedti to death: dated 18 November.
+- Iran's strikes on Kuwait and Bahrain: 18 November.
+- A star seen swallowing its companion (Nature): first reported with the paper on 18 November; Reuters dated it 20 November.

@@ -1,0 +1,76 @@
+<!doctype html>
+<!--
+  Direction B4, "front + briefs with drawings": as B2 (same 30 stories, same words), but each
+  of the ten tiles is led by a drawing of its event (design/art.js) instead of a generic
+  pictogram or figure. the lead, the ten biggest stories as icon tiles (two rows
+  of five), then the other 19 stories of 19 November 2026 as one-line briefs by region.
+  Content: design/stories.js. Render: ./render.sh design/front-art.html <out.png>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>19 November 2026 - front and briefs</title>
+<script src="stories.js"></script>
+<script src="icons.js"></script>
+<script src="art.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1024px; height: 1024px; overflow: hidden; }
+  body { background: #f3f0e8; color: #16191e; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 18px 20px 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #16191e; padding-bottom: 7px; }
+  .date { font-size: 50px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+  .kick { font-size: 14px; font-weight: 700; letter-spacing: 2.5px; color: #555b63; margin-bottom: 4px; }
+  .count { text-align: right; font-size: 15px; font-weight: 700; color: #555b63; line-height: 1.25; }
+  .lead { margin-top: 8px; padding: 7px 16px; background: #fff; border-left: 9px solid var(--c); }
+  .lead .place, .tile .place { font-size: 12.5px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; color: var(--c); }
+  .lead h1 { font-size: 30px; line-height: 1.05; letter-spacing: -0.5px; margin: 1px 0 3px; }
+  .lead p { font-size: 14.5px; line-height: 1.22; color: #3d434b; }
+  .tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px; }
+  .tile { background: #fff; border-top: 6px solid var(--c); padding: 5px 9px 5px; height: 172px; overflow: hidden; }
+  .tile .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px; height: 54px; }
+  .fig { font-size: 30px; font-weight: 800; letter-spacing: -1px; color: var(--c); white-space: nowrap; line-height: 1; }
+  .tile .place { text-align: right; font-size: 11px; max-width: 90px; line-height: 1.1; }
+  .brief { display: flex; gap: 7px; } .brief svg, .brief .bfig { flex: 0 0 22px; margin-top: 10px; }
+  .bfig { font-size: 11px; font-weight: 800; color: var(--c); }
+  .tile h2 { font-size: 16px; line-height: 1.1; font-weight: 800; letter-spacing: -0.2px; margin-top: 5px; }
+  .tile p { font-size: 12.5px; line-height: 1.18; color: #474d55; margin-top: 4px; }
+  .briefs-h { margin-top: 8px; font-size: 13px; font-weight: 800; letter-spacing: 2px; color: #16191e; border-bottom: 2px solid #16191e; padding-bottom: 3px; }
+  .briefs { column-count: 4; column-gap: 16px; column-fill: balance; margin-top: 5px; height: 372px; }
+  .brief { break-inside: avoid; font-size: 13px; line-height: 1.18; padding: 2px 0 3px; border-bottom: 1px solid #ddd8cc; }
+  .brief b { font-size: 13.5px; }
+  .brief .pl { font-weight: 800; color: var(--c); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; display: block; }
+  footer { position: absolute; left: 20px; right: 20px; bottom: 7px; font-size: 11.5px; color: #555b63; line-height: 1.35; border-top: 1px solid #c9c5ba; padding-top: 4px; }
+  footer b { color: #16191e; }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="kick">THE WORLD’S NEWS ON ONE PAGE</div><div class="date" id="date"></div></div>
+  <div class="count" id="count"></div>
+</header>
+<section class="lead" id="lead"></section>
+<section class="tiles" id="tiles"></section>
+<div class="briefs-h">ALSO ON THURSDAY, BY REGION</div>
+<section class="briefs" id="briefs"></section>
+<footer id="foot"></footer>
+<script>
+  const R = window.REGIONS;
+  document.getElementById('date').textContent = window.DAY;
+  document.getElementById('count').innerHTML = `${window.STORIES.filter((s) => !s.extra).length + 1} stories<br>across 6 regions`;
+  const L = window.LEAD;
+  const lead = document.getElementById('lead');
+  lead.style.setProperty('--c', R[L.region].color);
+  lead.innerHTML = `<div class="place">${L.place}</div><h1>${L.head}</h1><p>${L.detail}</p>`;
+  const sorted = [...window.STORIES.filter((s) => !s.extra)].sort((a, b) => a.rank - b.rank);
+  const front = sorted.slice(0, 10); // not `top`: that is window.top in a classic script
+  const rest = sorted.slice(10);
+  document.getElementById('tiles').innerHTML = front.map((s) =>
+    `<div class="tile" style="--c:${R[s.region].color}"><div class="top">${s.art ? window.art(s.art, 54) : s.fig ? `<span class="fig">${s.fig}</span>` : window.icon(s.icon, 40, R[s.region].color)}<span class="place">${s.place}</span></div><h2>${s.head}</h2><p>${s.detail}</p></div>`).join('');
+  const order = ['eu', 'me', 'as', 'af', 'am', 'gl'];
+  rest.sort((a, b) => order.indexOf(a.region) - order.indexOf(b.region) || a.rank - b.rank);
+  document.getElementById('briefs').innerHTML = rest.map((s) =>
+    `<div class="brief" style="--c:${R[s.region].color}">${window.icon(s.icon, 22, R[s.region].color)}<div><span class="pl">${s.place}</span><b>${s.head}.</b> ${s.detail}.</div></div>`).join('');
+  document.getElementById('foot').innerHTML = `<b>Each story checked against two or more outlets</b> (Reuters, AP, BBC, The Guardian, DW, Al Jazeera, Washington Post, Yonhap, The Hindu, Kyodo and others).<br><b>Date check.</b> ${window.NOT_THIS_DAY}`;
+</script>
+</body>
+</html>
