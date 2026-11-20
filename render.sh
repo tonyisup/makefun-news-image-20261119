@@ -1,14 +1,14 @@
 #!/bin/sh
 # Render a layout to a 1024x1024 PNG with headless Chrome.
 # Usage: ./render.sh [layout.html] [out.png]
-#   default: design/gemini-mosaic.html -> entry.png (the image main.ts ships)
+#   default: "design/gemini-mosaic.html?big=1" -> entry.png (the image main.ts ships)
 #   e.g.     ./render.sh design/ledger.html candidates/ledger.png
 # CHROME=/path/to/chrome overrides the browser. The grader never runs this:
 # main.ts only copies the committed entry.png.
 set -eu
 
 here="$(cd "$(dirname "$0")" && pwd)"
-layout="${1:-design/gemini-mosaic.html}"
+layout="${1:-design/gemini-mosaic.html?big=1}"
 out="${2:-entry.png}"
 case "$layout" in /*) ;; *) layout="$here/$layout" ;; esac
 case "$out" in /*) ;; *) out="$here/$out" ;; esac

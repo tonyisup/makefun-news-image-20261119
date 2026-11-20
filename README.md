@@ -13,9 +13,10 @@ map numbers those ten pictures, and a world dispatch lists the other 24 stories 
 one source each. The stories cover Europe, the Middle East, Asia-Pacific, Africa and the
 Americas, and each was checked against two or more outlets ([SOURCES.md](SOURCES.md)).
 
-The layout grew out of an outside design brief (see "Outside design briefs" below). It drew
-level with our own 30-story mosaic (`design/mosaic.html`, entered first) in local judging,
-so both were entered to let the real judge decide.
+The layout grew out of an outside design brief (see "Outside design briefs" below). This is
+its round-6 version (`design/gemini-mosaic.html?big=1`), with a taller hero and larger
+pictures. In local judging it led the version entered second, which in turn had drawn level
+with our own 30-story mosaic (`design/mosaic.html`, entered first). See EXPERIMENTS.md.
 
 ![19 November 2026](entry.png)
 
@@ -28,7 +29,7 @@ so both were entered to let the real judge decide.
 | `design/mosaic.html` | Our 30-story pictogram mosaic, entered first and level in local judging |
 | `design/icons.js`, `design/art.js`, `design/scenes.js` | Hand-drawn SVG pictograms, event drawings and scenes |
 | `design/*.html` | The other candidate layouts tried (see EXPERIMENTS.md); `layout.html` is the first entry |
-| `render.sh` | Renders a layout with headless Chrome and checks size and format (default: `gemini-mosaic.html` to `entry.png`) |
+| `render.sh` | Renders a layout with headless Chrome and checks size and format (default: `gemini-mosaic.html?big=1` to `entry.png`) |
 | `entry.png` | The rendered image (PNG, 1024x1024, about 270 KB) |
 | `main.ts` | The entry program (Node 22, standard library only): validates `entry.png` and copies it to the output directory |
 | `candidates/` | Every candidate image that was judged locally |

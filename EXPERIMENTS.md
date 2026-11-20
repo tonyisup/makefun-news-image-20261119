@@ -75,7 +75,7 @@ from the local rating, which is measured against rival entries, to the house rat
 measured against four images of 13 November's news. Those games are decided mostly by
 criterion 1, so they separate good entries weakly, and the two scales are not one line.
 
-Ratings are from the final fit over all 1,079 pinned calls, so earlier rows moved a little
+Rounds 1-5 ratings are from the fit over the first 1,079 pinned calls, so earlier rows moved a little
 as data came in (D: −0.31 after round 2, −0.29 now, with 84 calls). The opponents fall
 between −0.16 and +0.07. Head to head (both orders, both routes): D took 0.51 against B2
 and 0.55 against D4 (12 calls each), D4 took 0.54 against B2, and D took 0.512 ± 0.040
