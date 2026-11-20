@@ -4,12 +4,18 @@
 [![rank](https://make.fun/badge/news-image-20261119/tonyisup/makefun-news-image-20261119/rank.svg)](https://make.fun/bounty/news-image-20261119/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
 [![reward](https://make.fun/badge/news-image-20261119/tonyisup/makefun-news-image-20261119/reward.svg)](https://make.fun/bounty/news-image-20261119?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
 
-The world's news of Thursday 19 November 2026 in 30 pictures. The lead is the first
-Trump–Xi–Putin summit in Shenzhen; below it, one cell per story, most consequential first.
-Each cell leads with a pictogram or the story's key figure (51–48, −1,101, 109–0, 4.9%),
-then gives a short label and one line of detail. The stories cover Europe, the Middle East,
-Asia-Pacific, Africa and the Americas, across war, law, markets, climate, politics, sport
-and culture, and each was checked against two or more outlets ([SOURCES.md](SOURCES.md)).
+The world's news of Thursday 19 November 2026 as a poster of 34 stories. The lead is a
+drawing of the first Trump–Xi–Putin summit in Shenzhen. Beside it and below it sit nine
+more drawn scenes, each with a caption band and its source: the World Court's 9–6 genocide
+ruling, Putin ruling out truce talks, the Dow's 1,101-point fall, Anthropic's IPO, the
+COP31 draft, the Berlin talks, the Hormuz tankers, Gaza and GTA VI. Underneath, a locator
+map numbers those ten pictures, and a world dispatch lists the other 24 stories by region,
+one source each. The stories cover Europe, the Middle East, Asia-Pacific, Africa and the
+Americas, and each was checked against two or more outlets ([SOURCES.md](SOURCES.md)).
+
+The layout grew out of an outside design brief (see "Outside design briefs" below). It drew
+level with our own 30-story mosaic (`design/mosaic.html`, entered first) in local judging,
+so both were entered to let the real judge decide.
 
 ![19 November 2026](entry.png)
 
@@ -18,11 +24,12 @@ and culture, and each was checked against two or more outlets ([SOURCES.md](SOUR
 | File | Role |
 |---|---|
 | `design/stories.js` | The day's stories, one source of truth for every layout: labels, places, key figures, outlets |
-| `design/mosaic.html` | The shipped layout: a 6x5 mosaic of picture cells under the lead |
+| `design/gemini-mosaic.html` | The shipped layout: a poster of drawn scenes with caption bands, a locator map and a world dispatch |
+| `design/mosaic.html` | Our 30-story pictogram mosaic, entered first and level in local judging |
 | `design/icons.js`, `design/art.js`, `design/scenes.js` | Hand-drawn SVG pictograms, event drawings and scenes |
 | `design/*.html` | The other candidate layouts tried (see EXPERIMENTS.md); `layout.html` is the first entry |
-| `render.sh` | Renders a layout with headless Chrome and checks size and format (default: `mosaic.html` to `entry.png`) |
-| `entry.png` | The rendered image (PNG, 1024x1024, about 280 KB) |
+| `render.sh` | Renders a layout with headless Chrome and checks size and format (default: `gemini-mosaic.html` to `entry.png`) |
+| `entry.png` | The rendered image (PNG, 1024x1024, about 270 KB) |
 | `main.ts` | The entry program (Node 22, standard library only): validates `entry.png` and copies it to the output directory |
 | `candidates/` | Every candidate image that was judged locally |
 | `tools/judge.ts` | A local copy of the contest's judge (OpenRouter), used for sparring |
