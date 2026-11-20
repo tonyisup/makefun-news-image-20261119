@@ -30,7 +30,7 @@ local and is gitignored, because its reasons describe other entries.
   function) with HTTP 400. Retries only happen after an answer with no verdict, so this cost
   1 call in about 800.
 
-## Results (1,079 pinned calls; spend about $1.21)
+## Results (1,571 pinned calls; spend about $1.64)
 
 | Round | Candidate | Stories | Rating ± SE | E vs top 5 |
 |---|---|---|---|---|
@@ -52,6 +52,28 @@ local and is gitignored, because its reasons describe other entries.
 | 5 | gemini-mosaic, after Gemini's "Editorial Poster Mosaic" (`gemini-mosaic.html`) | 34 | −0.26 ± 0.26 | 0.44 |
 | 5 | gpt-three-acts, after GPT's "News in Three Acts" (`gpt-three-acts.html`) | 34 | −0.56 ± 0.27 | 0.36 |
 | 5 | gpt-atlas, after GPT's "Living Atlas" (`gpt-atlas.html`) | 34 | −0.88 ± 0.28 | 0.29 |
+| 6 | gemini-mosaic, re-fitted with 216 calls | 34 | −0.29 ± 0.14 | 0.43 |
+| 6 | g6a: gemini-mosaic with the 30-story set (`gemini-mosaic.html?n=30`) | 30 | −0.57 ± 0.17 | 0.36 |
+| 6 | g6b: gemini-mosaic without the map (`gemini-mosaic.html?nomap=1`) | 34 | −0.60 ± 0.17 | 0.36 |
+| 6 | g6c: gemini-mosaic with a taller hero and picture tiers (`gemini-mosaic.html?big=1`) | 34 | −0.18 ± 0.17 | 0.46 |
+
+Round 6, head to head against gemini-mosaic (24 calls each, both orders, both routes):
+g6a took 0.396 (picked 0 of 24), g6b took 0.388 (0 of 24) and g6c took 0.554 ± 0.022
+(18 of 24). In the full fit, g6c leads gemini-mosaic by +0.12 ± 0.21. It is ahead on both
+routes and head to head, but not by more than the conservative fit error.
+
+## Real provisional rates against the house images
+
+| Entry | Local rating | Predicted | Real provisional rate (90% interval) |
+|---|---|---|---|
+| v1 (`layout.html`) | −0.87 | — | 0.981243 (0.9739–0.9886), 12-0 |
+| D (`mosaic.html`) | −0.29 | about 0.989 | 0.977797 (0.9696–0.9860), 11-1-0 |
+| gemini-mosaic (`gemini-mosaic.html`) | −0.29 | — | 0.986947 (0.9812–0.9927), 12-0 |
+
+The prediction for D missed. It was a straight line through two points (v1 and the top five)
+from the local rating, which is measured against rival entries, to the house rate, which is
+measured against four images of 13 November's news. Those games are decided mostly by
+criterion 1, so they separate good entries weakly, and the two scales are not one line.
 
 Ratings are from the final fit over all 1,079 pinned calls, so earlier rows moved a little
 as data came in (D: −0.31 after round 2, −0.29 now, with 84 calls). The opponents fall

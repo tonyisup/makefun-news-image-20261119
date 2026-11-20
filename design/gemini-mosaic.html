@@ -9,7 +9,10 @@
   the other 24 stories, then a date-check strip. Corrections to the brief, ours win: no blast
   on the Kerch Bridge, no mines drawn at Hormuz (Iran's claim, in the caption), no timeline
   (our sources give no reporting times), no padding toward 40 stories.
-  Content: design/stories.js. Render: ./render.sh design/gemini-mosaic.html <out.png>
+  Round-6 switches (each one change; none set renders the submitted image exactly):
+  ?n=30 the 30-story set with larger dispatch type; ?nomap=1 no map, the dispatch takes the
+  full width; ?big=1 a taller hero and picture tiers, a shorter dispatch.
+  Content: design/stories.js. Render: ./render.sh "design/gemini-mosaic.html[?n=30|?nomap=1|?big=1]" <out.png>
 -->
 <html lang="en">
 <head>
@@ -51,6 +54,17 @@
   .d .dot { flex: 0 0 8px; height: 8px; margin-top: 4px; border-radius: 50%; background: var(--c); }
   .d b { font-weight: 800; }
   .d i { font-style: normal; color: #7c8087; font-size: 10px; font-weight: 600; }
+  body.n30 .d { font-size: 14.5px; padding-bottom: 6px; }
+  body.nomap .bottom { grid-template-columns: 1fr; }
+  body.nomap .bottom > div:first-child { display: none; }
+  body.nomap .dispatch { column-count: 4; }
+  body.nomap .d { font-size: 14px; }
+  body.big .upper { height: 372px; }
+  body.big .hero { height: 372px !important; }
+  body.big .hero h1 { font-size: 29px; }
+  body.big .lower { height: 236px; }
+  body.big .bottom { height: 238px; }
+  body.big .d { font-size: 12px; padding-bottom: 2px; }
   .datecheck { position: absolute; left: 12px; right: 12px; bottom: 6px; font-size: 11.5px; background: #fff4ef; border-left: 5px solid #b5482c; padding: 4px 8px; color: #3a3d42; }
   .datecheck b { color: #b5482c; letter-spacing: 1px; }
 </style>
@@ -65,8 +79,12 @@
 <section class="bottom"><div><div class="maph">WHERE IT HAPPENED · NUMBERS MATCH THE PICTURES</div><div id="map"></div></div><div class="dispatch" id="dispatch"></div></section>
 <div class="datecheck" id="datecheck"></div>
 <script>
+  const q = new URLSearchParams(location.search);
+  if (q.get('n') === '30') document.body.classList.add('n30');
+  if (q.get('nomap') === '1') document.body.classList.add('nomap');
+  if (q.get('big') === '1') document.body.classList.add('big');
   const R = window.REGIONS;
-  const all = [...window.STORIES].sort((a, b) => a.rank - b.rank);
+  const all = [...window.STORIES].filter((s) => q.get('n') !== '30' || !s.extra).sort((a, b) => a.rank - b.rank);
   const L = window.LEAD;
   document.getElementById('date').textContent = window.DAY;
   const count = (r) => all.filter((s) => s.region === r).length + (L.region === r ? 1 : 0);
